@@ -1,0 +1,1 @@
+# sonar-break-maven-plugin
