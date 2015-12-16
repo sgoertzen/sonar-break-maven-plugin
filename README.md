@@ -7,7 +7,8 @@ Will break a build if sonar reports errors with your project.  Works with Sonar 
 To run this manually:
 mvn com.sgoertzen.maven:sonarbreak:1.0:sonarBreak
 
-Or to include in your project update your pom.xml to include:
+## Maven 
+Or to include in your project, update your pom.xml with the following:
 
 
     <dependencies>
@@ -31,3 +32,13 @@ Or to include in your project update your pom.xml to include:
             </plugin>
         </plugins>
     </build>
+
+
+## Integration Tests
+    cd integeration-tests
+    ./run.sh
+
+Details:
+Downloads and runs a sonar server
+Builds a test pom and pushes the results into sonar
+Tests this plugin by fetching the sonar status
