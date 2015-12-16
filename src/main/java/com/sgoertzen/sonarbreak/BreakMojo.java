@@ -27,13 +27,14 @@ public class BreakMojo extends AbstractMojo {
             throw new MojoExecutionException("Unable to get the group and artifact id of the building project");
         }
         MavenProject mavenProject = (MavenProject)project;
+        String version = mavenProject.getVersion();
         String resourceName = String.format("%s:%s", mavenProject.getGroupId(), mavenProject.getArtifactId());
 
         try {
             Sonar sonar = new Sonar(sonarServer);
-            QualityGateQuery query = new QualityGateQuery(resourceName);
-            getLog().info("Fetching details on " + resourceName);
-            QualityGateResult result = QueryExecutor.execute(sonar, query);
+            QualityGateQuery query = new QualityGateQuery(resourceName, version);
+            getLog().info("Fetching details on " + resourceName + ", version: " + version);
+            QualityGateResult result = QueryExecutor.execute(sonar, query, getLog());
             getLog().info("Got a result of " + result.getStatus());
             if (result.getStatus() == ConditionStatus.ERROR){
                 // TODO: Include details from the conditions so they know what broke

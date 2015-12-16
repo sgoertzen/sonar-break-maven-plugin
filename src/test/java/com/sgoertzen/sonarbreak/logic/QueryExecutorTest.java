@@ -16,7 +16,7 @@ public class QueryExecutorTest {
     @Test
     public void buildURLTest() throws MalformedURLException {
         Sonar sonar = new Sonar(new URL("https://sonar.test.com"));
-        QualityGateQuery query = new QualityGateQuery("some-service");
+        QualityGateQuery query = new QualityGateQuery("some-service", "1.0");
         URL url = QueryExecutor.buildURL(sonar, query);
         Assert.assertEquals("URL", "https://sonar.test.com/api/resources/index?resource=some-service&metrics=quality_gate_details", url.toString());
     }
@@ -24,7 +24,7 @@ public class QueryExecutorTest {
     @Test (expected = IllegalArgumentException.class)
     public void buildURLNoResourceTest() throws IllegalArgumentException, MalformedURLException {
         Sonar sonar = new Sonar(new URL("https://sonar.test.com"));
-        QualityGateQuery query = new QualityGateQuery("");
+        QualityGateQuery query = new QualityGateQuery("", "1.0");
         QueryExecutor.buildURL(sonar, query);
     }
 
