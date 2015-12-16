@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -41,12 +43,13 @@ public class QueryExecutor {
 
     protected static QualityGateResult parseResponse(String response) throws SonarBreakParseException {
         ObjectMapper mapper = new ObjectMapper();
+        final DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        mapper.setDateFormat(df);
         List<QualityGateResult> results;
         try {
             results = mapper.readValue(response, new TypeReference<List<QualityGateResult>>() {});
         } catch (IOException e) {
-            // TODO: Put the input in here?
-            throw new SonarBreakParseException("Unable to parse the json into a List of QualityGateResults.", e);
+            throw new SonarBreakParseException("Unable to parse the json into a List of QualityGateResults.  Json is: " + response, e);
         }
         if (results == null || results.size() != 1){
             throw new SonarBreakParseException("Unable to deserialize response");

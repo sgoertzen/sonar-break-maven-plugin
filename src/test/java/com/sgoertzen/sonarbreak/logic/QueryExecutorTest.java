@@ -1,6 +1,9 @@
 package com.sgoertzen.sonarbreak.logic;
 
 import com.sgoertzen.sonarbreak.model.*;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -71,15 +74,14 @@ public class QueryExecutorTest {
         Assert.assertEquals("Name does not match", "User Profile Service - Parent", result.getName());
         Assert.assertEquals("Version does not match", "1.2.54", result.getVersion());
 
-        // TODO: Uncomment these
-        //Assert.assertEquals("Date", "", result.getDate());
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZZ");
+        DateTime expectedDateTime = formatter.parseDateTime("2015-12-10T00:52:31+0000");
+        Assert.assertEquals("DateTime", expectedDateTime, result.getDatetime());
     }
 
     @Test(expected = SonarBreakParseException.class)
     public void parseResponseNonJSONTest() throws Exception {
         String input = "<html><body>ERROR</body></html>";
-
-        QualityGateResult result = QueryExecutor.parseResponse(input);
-        Assert.assertEquals("7560", result.getId());
+        QueryExecutor.parseResponse(input);
     }
 }

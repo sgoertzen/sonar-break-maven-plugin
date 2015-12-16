@@ -3,6 +3,7 @@ package com.sgoertzen.sonarbreak.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.sgoertzen.sonarbreak.logic.QualityGateResultDeserializer;
+import org.joda.time.DateTime;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class QualityGateResult {
     private String id;
     private String key;
     private String name;
-    private String date;
+    private DateTime datetime;
     private String version;
     private List<QualityGateCondition> conditions;
     private ConditionStatus status;
@@ -44,12 +45,12 @@ public class QualityGateResult {
         this.name = name;
     }
 
-    public String getDate() {
-        return date;
+    public DateTime getDatetime() {
+        return datetime;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setDatetime(DateTime datetime) {
+        this.datetime = datetime;
     }
 
     public String getVersion() {
