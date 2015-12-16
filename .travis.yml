@@ -1,9 +1,9 @@
 language: java
 jdk:
   - openjdk7
+sudo: required
 
 script:
- - mvn clean install
  - wget https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-5.2.zip
  - unzip sonarqube-5.2.zip
  - sonarqube-5.2/bin/linux-x86-64/sonar.sh start
