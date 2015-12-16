@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.sgoertzen.maven.test</groupId>
+    <artifactId>sonarbreak-test</artifactId>
+    <version>1.0</version>
+
+    <name>sonar-break-test</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.sgoertzen.maven</groupId>
+            <artifactId>sonarbreak</artifactId>
+            <version>1.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.sgoertzen.maven</groupId>
+                <artifactId>sonarbreak</artifactId>
+                <version>1.0</version>
+                <configuration>
+                    <sonarServer>https://sonar.audiusasite.com</sonarServer>
+                    <resourceName>com.akqa.audi.service:user-profile-parent</resourceName>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
