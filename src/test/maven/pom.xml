@@ -10,10 +10,6 @@
 
     <name>sonar-break-test</name>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.sgoertzen.maven</groupId>
@@ -25,14 +21,28 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>2.7.1</version>
+            </plugin>
+            <plugin>
                 <groupId>com.sgoertzen.maven</groupId>
                 <artifactId>sonarbreak</artifactId>
                 <version>1.0</version>
                 <configuration>
-                    <sonarServer>https://sonar.audiusasite.com</sonarServer>
-                    <resourceName>com.akqa.audi.service:user-profile-parent</resourceName>
+                    <sonarServer>http://localhost:9000/</sonarServer>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <sonar.host.url>http://localhost:9000</sonar.host.url>
+        <sonar.language>java</sonar.language>
+        <sonar.host.connectTimeoutMs>300000</sonar.host.connectTimeoutMs>
+        <sonar.host.readTimeoutMs>300000</sonar.host.readTimeoutMs>
+        <sonar.issuesReport.html.enable>true</sonar.issuesReport.html.enable>
+        <sonar.issuesReport.console.enable>true</sonar.issuesReport.console.enable>
+    </properties>
 </project>
