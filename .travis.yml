@@ -3,12 +3,5 @@ jdk:
   - oraclejdk7
 
 script:
- - cd src/test/maven
+ - cd integration-test
  - ./run.sh
-# - wget https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-5.2.zip
-# - unzip sonarqube-5.2.zip
-# - sonarqube-5.2/bin/linux-x86-64/sonar.sh start
-# - for i in {1..20}; do if (curl -I http://localhost:9000 2>/dev/null | grep -q 200) then echo found; break; fi; sleep 1; done
-# - cd src/test/maven
-# - mvn clean install sonar:sonar com.sgoertzen.maven:sonarbreak:1.0:sonarBreak
-# - sonarqube-5.2/bin/linux-x86-64/sonar.sh stop
