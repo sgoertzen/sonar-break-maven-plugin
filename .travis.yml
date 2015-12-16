@@ -3,12 +3,11 @@ jdk:
   - openjdk7
 
 script:
+ - mvn clean install
  - wget https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-5.2.zip
  - unzip sonarqube-5.2.zip
  - sonarqube-5.2/bin/linux-x86-64/sonar.sh start
- - sleep 10
-# TODO: Need to loop this somehow until it returns a 200
-# curl -I http://localhost:9000 2>/dev/null | head -n 1 | cut -d$' ' -f2
+ - for i in {1..100}; do if (curl -I http://localhost:9000 2>/dev/null | grep -q 200) then echo found; break; fi; sleep 1; done
  - cd src/test/maven
- - mci sonar:sonar com.sgoertzen.maven:sonarbreak:1.0:sonarBreak
+ - mvn clean install sonar:sonar com.sgoertzen.maven:sonarbreak:1.0:sonarBreak
  - sonarqube-5.2/bin/linux-x86-64/sonar.sh stop
