@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by sgoertzen on 12/14/15.
+ * Represent the status of a sonar condition
  */
 public enum ConditionStatus {
     OK,
@@ -14,7 +14,7 @@ public enum ConditionStatus {
     ERROR;
 
 
-    private static Map<String, ConditionStatus> namesMap = new HashMap<String, ConditionStatus>(3);
+    private static Map<String, ConditionStatus> namesMap = new HashMap<>(3);
 
     static {
         namesMap.put("OK", OK);

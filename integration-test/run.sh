@@ -15,7 +15,7 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
 fi
 
 # Wait for sonar to become available
-for i in {1..20}; do if (curl -I http://127.0.0.1:9000 2>/dev/null | grep -q 200); then echo "Sonar up and running"; break; fi; echo "Waiting for "; sleep 1; done
+for i in {1..20}; do if (curl -I http://127.0.0.1:9000 2>/dev/null | grep -q 200); then echo "Sonar up and running"; break; fi; echo "Waiting for sonar to become available"; sleep 1; done
 
 # Run our tests
 mvn clean install sonar:sonar com.sgoertzen.maven:sonarbreak:1.0:sonarBreak
