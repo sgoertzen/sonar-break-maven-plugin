@@ -1,8 +1,5 @@
 package com.sgoertzen.sonarbreak.model;
 
-/**
- * Created by sgoertzen on 12/14/15.
- */
 public class QualityGateQuery {
 
     private String resource;

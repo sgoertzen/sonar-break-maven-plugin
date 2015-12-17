@@ -4,11 +4,8 @@
 
 Will break a build if sonar reports errors with your project.  Works with Sonar 5.2.
 
-To run this manually:
-mvn com.sgoertzen.maven:sonarbreak:1.0:sonarBreak
-
 ## Maven 
-Or to include in your project, update your pom.xml with the following:
+To include in your project, update your pom.xml with the following:
 
 
     <dependencies>
@@ -32,6 +29,9 @@ Or to include in your project, update your pom.xml with the following:
             </plugin>
         </plugins>
     </build>
+
+Then run maven using the command: 
+    mvn com.sgoertzen.maven:sonarbreak:1.0:sonarBreak
 
 
 ## Integration Tests

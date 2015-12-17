@@ -2,14 +2,11 @@ package com.sgoertzen.sonarbreak.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.sgoertzen.sonarbreak.logic.QualityGateResultDeserializer;
+import com.sgoertzen.sonarbreak.QualityGateResultDeserializer;
 import org.joda.time.DateTime;
 
 import java.util.List;
 
-/**
- * Created by sgoertzen on 12/14/15.
- */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonDeserialize(using = QualityGateResultDeserializer.class)
 public class QualityGateResult {

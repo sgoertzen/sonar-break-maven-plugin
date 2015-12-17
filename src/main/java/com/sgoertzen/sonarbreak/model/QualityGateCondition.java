@@ -1,9 +1,5 @@
 package com.sgoertzen.sonarbreak.model;
 
-/**
- * Created by sgoertzen on 12/14/15.
- */
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
