@@ -29,9 +29,22 @@ To include in your project, update your pom.xml with the following:
         </plugins>
     </build>
 
-Then run maven using the command: 
-    mvn com.sgoertzen.maven:sonarbreak:1.0:sonarBreak
+You must also have the sonar plugin installed:
+    <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>sonar-maven-plugin</artifactId>
+        <version>2.7.1</version>
+    </plugin>
 
+Then run maven using the command: 
+    mvn sonar:sonar sonar-break:sonar-break
+
+Details:
+sonar:sonar - This will execute the sonar task to push the code up to sonar
+sonar-break:sonar-break - This will execute this plugin, which will communicate with your sonar server and will break the build if an error is found.
+
+### Full Example
+An full working pom.xml example can be seen in the integration-tests folder here: https://github.com/sgoertzen/sonar-break-maven-plugin/blob/master/integration-test/pom.xml
 
 ## Integration Tests
     cd integeration-tests

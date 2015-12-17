@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.sgoertzen.maven</groupId>
-    <artifactId>sonarbreak</artifactId>
+    <artifactId>sonar-break-maven-plugin</artifactId>
     <version>1.0</version>
     <packaging>maven-plugin</packaging>
 
