@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/sgoertzen/sonar-break-maven-plugin.svg?branch=master)](https://travis-ci.org/sgoertzen/sonar-break-maven-plugin)
 
-Will break a build if sonar reports errors with your project.  Works with Sonar 5.2.
+A maven plugin that will fail a maven build if sonar reports errors with your project.  Works with Sonar 5.2.
 
 ## Maven 
 To include in your project, update your pom.xml with the following:
