@@ -23,8 +23,7 @@ To include in your project, update your pom.xml with the following:
                 <artifactId>sonarbreak</artifactId>
                 <version>1.0</version>
                 <configuration>
-                    <sonarServer>https://sonar.audiusasite.com</sonarServer>
-                    <resourceName>com.akqa.audi.service:user-profile-parent</resourceName>
+                    <sonarServer>https://sonar.yourserver.com</sonarServer>
                 </configuration>
             </plugin>
         </plugins>
