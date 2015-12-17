@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -91,7 +92,10 @@ public class QueryExecutor {
     private static QualityGateResult fetchSonarStatus(URL queryURL) throws IOException, SonarBreakException {
         InputStream in = null;
         try {
-            in = queryURL.openStream();
+            URLConnection connection = queryURL.openConnection();
+            connection.setRequestProperty("Accept", "application/json");
+            in = connection.getInputStream();
+
             String response = IOUtils.toString(in);
             return parseResponse(response);
         }
@@ -114,7 +118,9 @@ public class QueryExecutor {
             connection.setRequestMethod("HEAD");
             int responseCode = connection.getResponseCode();
             if (200 <= responseCode && responseCode <= 399) {
+                log.debug(String.format("Got a valid response of %d from %s", responseCode, url));
                 serviceFound = true;
+                break;
             }
             else {
                 try {
@@ -130,9 +136,9 @@ public class QueryExecutor {
 
     /**
      * Creates a url for the specified quality gate query
+     *
      * @param sonar The sonar server we will be querying
      * @param query Holds details on the query we want to make
-     * @param log
      * @return A URL object representing the query
      * @throws MalformedURLException
      * @throws IllegalArgumentException
@@ -147,6 +153,7 @@ public class QueryExecutor {
 
     /**
      * Parses the string response from sonar into POJOs.
+     *
      * @param response The json response from the sonar server.
      * @return Object representing the Sonar response
      * @throws SonarBreakException Thrown if the response is not JSON or it does not contain quality gate data.
@@ -162,7 +169,7 @@ public class QueryExecutor {
             throw new SonarBreakException("Unable to parse the json into a List of QualityGateResults.  Json is: " + response, e);
         }
         if (results == null || results.size() != 1){
-            throw new SonarBreakException("Unable to deserialize response");
+            throw new SonarBreakException("Unable to deserialize JSON response: " + response);
         }
         return results.get(0);
     }

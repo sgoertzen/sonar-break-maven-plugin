@@ -10,14 +10,6 @@
 
     <name>sonar-break-test</name>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.sgoertzen.maven</groupId>
-            <artifactId>sonar-break-maven-plugin</artifactId>
-            <version>1.0</version>
-        </dependency>
-    </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -39,10 +31,5 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.host.url>http://localhost:9000</sonar.host.url>
-        <sonar.language>java</sonar.language>
-        <sonar.host.connectTimeoutMs>300000</sonar.host.connectTimeoutMs>
-        <sonar.host.readTimeoutMs>300000</sonar.host.readTimeoutMs>
-        <sonar.issuesReport.html.enable>true</sonar.issuesReport.html.enable>
-        <sonar.issuesReport.console.enable>true</sonar.issuesReport.console.enable>
     </properties>
 </project>

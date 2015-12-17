@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import static com.sgoertzen.sonarbreak.model.ConditionStatus.*;
+
 /**
  * Custom maven plugin to break a maven build if sonar rules are not met.
  */
-@Mojo( name = "sonar-break" )
-public class BreakMojo extends AbstractMojo {
+@Mojo( name = "sonar-break", aggregator = true )
+public class SonarBreakMojo extends AbstractMojo {
 
     @Parameter(property = "sonarServer", required = true)
     protected String sonarServer;
@@ -31,33 +33,39 @@ public class BreakMojo extends AbstractMojo {
         MavenProject mavenProject = (MavenProject)project;
         String version = mavenProject.getVersion();
         String resourceName = String.format("%s:%s", mavenProject.getGroupId(), mavenProject.getArtifactId());
+        getLog().info("Fetching details on " + resourceName + ", version: " + version);
 
         try {
             Sonar sonar = new Sonar(sonarServer);
             QualityGateQuery query = new QualityGateQuery(resourceName, version);
-            getLog().info("Fetching details on " + resourceName + ", version: " + version);
             QualityGateResult result = QueryExecutor.execute(sonar, query, getLog());
             getLog().info("Got a result of " + result.getStatus());
-            if (result.getStatus() == ConditionStatus.ERROR){
-                String errorMessage = buildErrorString(result.getConditions());
-                throw new MojoExecutionException("Build did not past sonar tests.  " + errorMessage);
+            switch (result.getStatus()){
+                case ERROR:
+                    throw new MojoExecutionException("Build did not past sonar tests.  " + buildErrorString(result.getConditions()));
+                case WARNING:
+                    getLog().info("Build passed but warnings encountered.  " + buildErrorString(result.getConditions()));
+                    break;
+                case OK:
+                    getLog().info("Successfully passed Sonar checks");
+                    break;
+                default:
+                    throw new MojoExecutionException("Unknown result state encountered: " + result.getStatus());
             }
 
         } catch (SonarBreakException | IOException e) {
-            String errorMessage = String.format("Error while running sonar Break.  Re-run with -e to see the full stack trace. ");
+            String errorMessage = "Error while running sonar Break.  Re-run with -e to see the full stack trace.";
             throw new MojoExecutionException(errorMessage, e);
         }
     }
 
-    private static final String CONDITION_FORMAT = "%s has a status of %s and a value of %s (Warning at: %s, error at %s).";
+    private static final String CONDITION_FORMAT = "%s: %s level at %s (must be beyond %s).";
 
     protected static String buildErrorString(List<QualityGateCondition> conditions) {
         StringBuilder builder = new StringBuilder();
         for(QualityGateCondition condition : conditions){
-            if (builder.length() > 0){
-                builder.append("\n");
-            }
-            String statusLine = String.format(CONDITION_FORMAT, condition.getName(), condition.getStatus(), condition.getActualLevel(), condition.getWarningLevel(), condition.getErrorLevel());
+            builder.append("\n");
+            String statusLine = String.format(CONDITION_FORMAT, condition.getStatus(), condition.getName(), condition.getActualLevel(), condition.getErrorLevel());
             builder.append(statusLine);
         }
         return builder.toString();

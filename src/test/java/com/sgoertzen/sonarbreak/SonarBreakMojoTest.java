@@ -9,7 +9,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class BreakMojoTest {
+public class SonarBreakMojoTest {
 
     @Test
     public void testBuildErrorString() throws Exception {
@@ -22,9 +22,10 @@ public class BreakMojoTest {
         condition.setErrorLevel("3");
         conditions.add(condition);
 
-        String errorString = BreakMojo.buildErrorString(conditions);
+        String errorString = SonarBreakMojo.buildErrorString(conditions);
 
         assertTrue("Must contain name", errorString.contains("house"));
-        assertEquals("house has a status of WARNING and a value of 5 (Warning at: 10, error at 3).", errorString);
+        assertTrue("Must contain name", errorString.contains("3"));
+        assertTrue("Must contain name", errorString.contains("5"));
     }
 }

@@ -18,7 +18,7 @@ public enum ConditionStatus {
 
     static {
         namesMap.put("OK", OK);
-        namesMap.put("WARNING", WARNING);
+        namesMap.put("WARN", WARNING);
         namesMap.put("ERROR", ERROR);
     }
 
