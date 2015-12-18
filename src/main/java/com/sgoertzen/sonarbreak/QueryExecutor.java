@@ -134,7 +134,7 @@ public class QueryExecutor {
      */
     protected boolean isURLAvailable(URL url, int retryCount) throws IOException {
         boolean serviceFound = false;
-        for(int i=0; i<retryCount; i++) {
+        for (int i=0; i<retryCount; i++) {
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             connection.setRequestMethod("HEAD");
             int responseCode = connection.getResponseCode();

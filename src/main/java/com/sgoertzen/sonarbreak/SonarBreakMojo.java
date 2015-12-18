@@ -83,7 +83,7 @@ public class SonarBreakMojo extends AbstractMojo {
 
     protected static String buildErrorString(List<Condition> conditions) {
         StringBuilder builder = new StringBuilder();
-        for(Condition condition : conditions){
+        for (Condition condition : conditions){
             builder.append("\n");
             String statusLine = String.format(CONDITION_FORMAT, condition.getStatus(), condition.getName(), condition.getActualLevel(), condition.getErrorLevel());
             builder.append(statusLine);

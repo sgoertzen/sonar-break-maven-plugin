@@ -41,6 +41,7 @@ should into sonar for the results of this build.  This parameter goes into the c
                 <version>1.0</version>
                 <configuration>
                     <sonarServer>https://sonar.yourserver.com</sonarServer>
+                    <sonarLookBackSeconds>60</sonarLookBackSeconds>
                 </configuration>
             </plugin>
         </plugins>
