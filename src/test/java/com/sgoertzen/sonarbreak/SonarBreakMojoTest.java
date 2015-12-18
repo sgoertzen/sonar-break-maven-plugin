@@ -1,7 +1,7 @@
 package com.sgoertzen.sonarbreak;
 
-import com.sgoertzen.sonarbreak.model.ConditionStatus;
-import com.sgoertzen.sonarbreak.model.QualityGateCondition;
+import com.sgoertzen.sonarbreak.qualitygate.ConditionStatus;
+import com.sgoertzen.sonarbreak.qualitygate.Condition;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -13,8 +13,8 @@ public class SonarBreakMojoTest {
 
     @Test
     public void testBuildErrorString() throws Exception {
-        List<QualityGateCondition> conditions = new ArrayList<>();
-        QualityGateCondition condition = new QualityGateCondition();
+        List<Condition> conditions = new ArrayList<>();
+        Condition condition = new Condition();
         condition.setName("house");
         condition.setStatus(ConditionStatus.WARNING);
         condition.setActualLevel("5");

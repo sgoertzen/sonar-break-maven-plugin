@@ -1,11 +1,14 @@
-package com.sgoertzen.sonarbreak.model;
+package com.sgoertzen.sonarbreak.qualitygate;
 
-public class QualityGateQuery {
+/**
+ * A query to check the quality gate status for a resource in sonar
+ */
+public class Query {
 
     private String resource;
     private String version;
 
-    public QualityGateQuery(String resource, String version){
+    public Query(String resource, String version){
         setResource(resource);
         setVersion(version);
     }

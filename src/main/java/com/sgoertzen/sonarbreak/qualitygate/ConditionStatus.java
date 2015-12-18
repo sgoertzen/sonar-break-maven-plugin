@@ -1,4 +1,4 @@
-package com.sgoertzen.sonarbreak.model;
+package com.sgoertzen.sonarbreak.qualitygate;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represent the status of a sonar condition
+ * Represents the status of a sonar condition
  */
 public enum ConditionStatus {
     OK,

@@ -1,10 +1,13 @@
-package com.sgoertzen.sonarbreak.model;
+package com.sgoertzen.sonarbreak.qualitygate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * A quality gate condition as reported by Sonar
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class QualityGateCondition {
+public class Condition {
 
     @JsonProperty("metric")
     private String Name;

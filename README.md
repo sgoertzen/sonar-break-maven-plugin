@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/sgoertzen/sonar-break-maven-plugin.svg?branch=master)](https://travis-ci.org/sgoertzen/sonar-break-maven-plugin)
 
-A maven plugin that will fail a maven build if sonar reports errors with your project.  Works with Sonar 5.2.
+A maven plugin that will fail a maven build if sonar reports errors with your project.  Works with SonarQube 5.2.
 
 ## Maven 
 To include in your project, update your pom.xml with the following:
@@ -24,6 +24,24 @@ To include in your project, update your pom.xml with the following:
                 <version>1.0</version>
                 <configuration>
                     <sonarServer>https://sonar.yourserver.com</sonarServer>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+### Optional parameter
+There is an optional parameter "sonarLookBackSeconds" that can be specified to control how far into the past the plugin 
+should into sonar for the results of this build.  This parameter goes into the configuration section so the build piece of your pom.xml would look like: 
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.sgoertzen.maven</groupId>
+                <artifactId>sonarbreak</artifactId>
+                <version>1.0</version>
+                <configuration>
+                    <sonarServer>https://sonar.yourserver.com</sonarServer>
+                    <sonarLookBackSeconds>60</sonarLookBackSeconds>
                 </configuration>
             </plugin>
         </plugins>

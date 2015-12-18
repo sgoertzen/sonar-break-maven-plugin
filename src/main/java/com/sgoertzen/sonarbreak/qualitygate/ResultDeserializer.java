@@ -1,4 +1,4 @@
-package com.sgoertzen.sonarbreak;
+package com.sgoertzen.sonarbreak.qualitygate;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -6,9 +6,9 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sgoertzen.sonarbreak.model.ConditionStatus;
-import com.sgoertzen.sonarbreak.model.QualityGateCondition;
-import com.sgoertzen.sonarbreak.model.QualityGateResult;
+import com.sgoertzen.sonarbreak.qualitygate.ConditionStatus;
+import com.sgoertzen.sonarbreak.qualitygate.Condition;
+import com.sgoertzen.sonarbreak.qualitygate.Result;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -19,10 +19,10 @@ import java.util.List;
 /**
  * Custom JSON deserializer for a Quality Gate Result.
  */
-public class QualityGateResultDeserializer extends JsonDeserializer {
+public class ResultDeserializer extends JsonDeserializer {
     @Override
     public Object deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
-        QualityGateResult result = new QualityGateResult();
+        Result result = new Result();
 
         JsonNode root= jsonParser.readValueAsTree();
         result.setId(getText(root, "id"));
@@ -44,7 +44,7 @@ public class QualityGateResultDeserializer extends JsonDeserializer {
             throw new IOException("Node named \"msr\" not found in JSON response.");
         }
         Iterator<JsonNode> elements = msr.elements();
-        if(elements.hasNext()){
+        if (elements.hasNext()) {
             String qualityGateJson = elements.next().get("data").asText();
 
             ObjectMapper map2 = new ObjectMapper();
@@ -52,7 +52,7 @@ public class QualityGateResultDeserializer extends JsonDeserializer {
             String level = getText(jsonNode, "level");
             result.setStatus(ConditionStatus.forValue(level));
 
-            List<QualityGateCondition> conditions = map2.convertValue(jsonNode.get("conditions"), new TypeReference<List<QualityGateCondition>>() {});
+            List<Condition> conditions = map2.convertValue(jsonNode.get("conditions"), new TypeReference<List<Condition>>() {});
             result.setConditions(conditions);
         }
         return result;
