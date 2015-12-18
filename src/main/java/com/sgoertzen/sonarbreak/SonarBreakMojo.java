@@ -27,8 +27,6 @@ public class SonarBreakMojo extends AbstractMojo {
 
     public void execute() throws MojoExecutionException
     {
-        int sonarLookBackSecondsInteger = parseLookback();
-
         MavenProject mavenProject = getMavenProject();
         String version = mavenProject.getVersion();
         String resourceName = String.format("%s:%s", mavenProject.getGroupId(), mavenProject.getArtifactId());
@@ -36,7 +34,7 @@ public class SonarBreakMojo extends AbstractMojo {
 
         try {
             Query query = new Query(resourceName, version);
-            QueryExecutor executor = new QueryExecutor(sonarServer, sonarLookBackSecondsInteger, getLog());
+            QueryExecutor executor = new QueryExecutor(sonarServer, parseLookback(), getLog());
             Result result = executor.execute(query);
             processResult(result);
 
