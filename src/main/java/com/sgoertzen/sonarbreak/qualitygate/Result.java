@@ -1,21 +1,23 @@
-package com.sgoertzen.sonarbreak.model;
+package com.sgoertzen.sonarbreak.qualitygate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.sgoertzen.sonarbreak.QualityGateResultDeserializer;
 import org.joda.time.DateTime;
 
 import java.util.List;
 
+/**
+ * The results from a sonar query for this maven run
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonDeserialize(using = QualityGateResultDeserializer.class)
-public class QualityGateResult {
+@JsonDeserialize(using = ResultDeserializer.class)
+public class Result {
     private String id;
     private String key;
     private String name;
     private DateTime datetime;
     private String version;
-    private List<QualityGateCondition> conditions;
+    private List<Condition> conditions;
     private ConditionStatus status;
 
     public String getId() {
@@ -58,11 +60,11 @@ public class QualityGateResult {
         this.version = version;
     }
 
-    public List<QualityGateCondition> getConditions() {
+    public List<Condition> getConditions() {
         return conditions;
     }
 
-    public void setConditions(List<QualityGateCondition> conditions) {
+    public void setConditions(List<Condition> conditions) {
         this.conditions = conditions;
     }
 

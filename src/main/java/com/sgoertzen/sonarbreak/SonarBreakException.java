@@ -1,4 +1,4 @@
-package com.sgoertzen.sonarbreak.model;
+package com.sgoertzen.sonarbreak;
 
 public class SonarBreakException extends Exception {
     public SonarBreakException(String s){
