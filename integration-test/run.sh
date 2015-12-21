@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+mvn clean install
+
 # Fetch Sonar
 curl -L -O https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-5.2.zip
 # and extract
