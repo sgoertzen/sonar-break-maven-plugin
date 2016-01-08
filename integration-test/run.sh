@@ -32,5 +32,5 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
 fi
 
 # Clean up sonar
-rm -rf sonarqube-5.2
-rm -rf sonarqube-5.2.zip
+# rm -rf sonarqube-5.2
+# rm -rf sonarqube-5.2.zip

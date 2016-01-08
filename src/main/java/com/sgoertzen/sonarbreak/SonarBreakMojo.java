@@ -23,6 +23,9 @@ public class SonarBreakMojo extends AbstractMojo {
     @Parameter(property = "sonarLookBackSeconds", defaultValue = "60")
     protected String sonarLookBackSeconds;
 
+    @Parameter(property = "waitForProcessingSeconds", defaultValue = "300")
+    protected String waitForProcessingSeconds;
+
     private static final String CONDITION_FORMAT = "%s: %s level at %s (must be beyond %s).";
 
     public void execute() throws MojoExecutionException
@@ -34,7 +37,9 @@ public class SonarBreakMojo extends AbstractMojo {
 
         try {
             Query query = new Query(resourceName, version);
-            QueryExecutor executor = new QueryExecutor(sonarServer, parseLookback(), getLog());
+            final int sonarLookBackSeconds2 = parseParam(sonarLookBackSeconds, "sonarLookBackSeconds");
+            final int waitForProcessingSeconds2 = parseParam(waitForProcessingSeconds, "waitForProcessingSeconds");
+            QueryExecutor executor = new QueryExecutor(sonarServer, sonarLookBackSeconds2, waitForProcessingSeconds2, getLog());
             Result result = executor.execute(query);
             processResult(result);
 
@@ -43,12 +48,13 @@ public class SonarBreakMojo extends AbstractMojo {
         }
     }
 
-    private int parseLookback() throws MojoExecutionException {
+    private int parseParam(final String value, final String name) throws MojoExecutionException {
         try {
-            return Integer.parseInt(sonarLookBackSeconds);
+            getLog().debug(String.format("Parameter %s set to value of %s", name, value));
+            return Integer.parseInt(value);
         }
         catch (NumberFormatException e){
-            String message = String.format("Error while parsing the sonarLookBackSeconds.  The value of %s is not an integer.", sonarLookBackSeconds);
+            String message = String.format("Error while parsing the %s.  The value of %s is not an integer.", name, value);
             throw new MojoExecutionException(message, e);
         }
     }
@@ -67,11 +73,13 @@ public class SonarBreakMojo extends AbstractMojo {
     private void processResult(Result result) throws MojoExecutionException {
         getLog().info("Got a result of " + result.getStatus());
 
+        final String errorString = buildErrorString(result.getConditions());
         switch (result.getStatus()){
             case ERROR:
-                throw new MojoExecutionException("Build did not past sonar tests.  " + buildErrorString(result.getConditions()));
+                getLog().error(errorString);
+                throw new MojoExecutionException("Build did not past sonar tests.  " + errorString);
             case WARNING:
-                getLog().info("Build passed but warnings encountered.  " + buildErrorString(result.getConditions()));
+                getLog().info("Build passed but warnings encountered.  " + errorString);
                 break;
             case OK:
                 getLog().info("Successfully passed Sonar checks");

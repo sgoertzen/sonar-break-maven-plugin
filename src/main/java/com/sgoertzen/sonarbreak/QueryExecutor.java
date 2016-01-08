@@ -27,11 +27,11 @@ public class QueryExecutor {
 
     public static final String SONAR_FORMAT_PATH = "api/resources/index?resource=%s&metrics=quality_gate_details";
     public static final int SONAR_CONNECTION_RETRIES = 10;
-    public static final int SONAR_PROCESSING_RETRIES = 60;  // Number of times to wait
-    public static final int SONAR_PROCESSING_WAIT_TIME = 10000;  // wait time in milliseconds
+    public static final int SONAR_PROCESSING_WAIT_TIME = 10000;  // wait time between sonar checks in milliseconds
 
     private final URL sonarURL;
     private final int sonarLookBackSeconds;
+    private final int waitForProcessingSeconds;
     private final Log log;
 
     /**
@@ -39,12 +39,13 @@ public class QueryExecutor {
      *
      * @param sonarServer Fully qualified URL to the sonar server
      * @param sonarLookBackSeconds Amount of time to look back into sonar history for the results of this build
-     * @param log Log for logging  @return Results indicating if the build passed the sonar quality gate checks
-     * @throws MalformedURLException
+     * @param waitForProcessingSeconds Amount of time to wait for sonar to finish processing the job
+     *@param log Log for logging  @return Results indicating if the build passed the sonar quality gate checks  @throws MalformedURLException
      */
-    public QueryExecutor(String sonarServer, int sonarLookBackSeconds, Log log) throws MalformedURLException {
+    public QueryExecutor(String sonarServer, int sonarLookBackSeconds, int waitForProcessingSeconds, Log log) throws MalformedURLException {
         this.sonarURL = new URL(sonarServer);
         this.sonarLookBackSeconds = sonarLookBackSeconds;
+        this.waitForProcessingSeconds = waitForProcessingSeconds;
         this.log = log;
     }
 
@@ -76,8 +77,8 @@ public class QueryExecutor {
      * @throws SonarBreakException
      */
     private Result fetchSonarStatusWithRetries(URL queryURL, String version) throws IOException, SonarBreakException {
-        int attempts = 0;
         DateTime oneMinuteAgo = DateTime.now().minusSeconds(sonarLookBackSeconds);
+        DateTime waitUntil = DateTime.now().plusSeconds(waitForProcessingSeconds);
         do {
             Result result = fetchSonarStatus(queryURL);
             if (result.getVersion().equals(version) && result.getDatetime().isAfter(oneMinuteAgo)) {
@@ -93,11 +94,10 @@ public class QueryExecutor {
             } catch (InterruptedException e) {
                 // Do nothing
             }
-            attempts++;
-        } while (attempts < SONAR_PROCESSING_RETRIES);
+        } while (!waitUntil.isBeforeNow());
 
-        String message = String.format("Timed out while waiting for Sonar.  Waited %d seconds",
-                SONAR_PROCESSING_RETRIES*SONAR_PROCESSING_WAIT_TIME);
+        String message = String.format("Timed out while waiting for Sonar.  Waited %d seconds.  This time can be extended " +
+                        "using the \"waitForProcessingSeconds\" configuration parameter.", waitForProcessingSeconds);
         throw new SonarBreakException(message);
     }
 

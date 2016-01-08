@@ -29,9 +29,12 @@ To include in your project, update your pom.xml with the following:
         </plugins>
     </build>
 
-### Optional parameter
-There is an optional parameter "sonarLookBackSeconds" that can be specified to control how far into the past the plugin 
-should into sonar for the results of this build.  This parameter goes into the configuration section so the build piece of your pom.xml would look like: 
+### Optional parameters
+There are two optional parameters that can be used with this plugin.  
+* _sonarLookBackSeconds_: How far into the past the plugin should into sonar for the results of this build (default: 60)
+* _waitForProcessingSeconds_: How long to wait for sonar to finish processing the job (default: 300)
+
+These parameter goes into the configuration section so the build piece of your pom.xml would look like: 
 
     <build>
         <plugins>
@@ -42,6 +45,7 @@ should into sonar for the results of this build.  This parameter goes into the c
                 <configuration>
                     <sonarServer>https://sonar.yourserver.com</sonarServer>
                     <sonarLookBackSeconds>60</sonarLookBackSeconds>
+                    <waitForProcessingSeconds>600</waitForProcessingSeconds>
                 </configuration>
             </plugin>
         </plugins>
