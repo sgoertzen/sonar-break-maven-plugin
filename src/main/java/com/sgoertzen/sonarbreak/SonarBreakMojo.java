@@ -37,9 +37,9 @@ public class SonarBreakMojo extends AbstractMojo {
 
         try {
             Query query = new Query(resourceName, version);
-            final int sonarLookBackSeconds2 = parseParam(sonarLookBackSeconds, "sonarLookBackSeconds");
-            final int waitForProcessingSeconds2 = parseParam(waitForProcessingSeconds, "waitForProcessingSeconds");
-            QueryExecutor executor = new QueryExecutor(sonarServer, sonarLookBackSeconds2, waitForProcessingSeconds2, getLog());
+            final int sonarLookBackSecondsParsed = parseParam(sonarLookBackSeconds, "sonarLookBackSeconds");
+            final int waitForProcessingSecondsParsed = parseParam(waitForProcessingSeconds, "waitForProcessingSeconds");
+            QueryExecutor executor = new QueryExecutor(sonarServer, sonarLookBackSecondsParsed, waitForProcessingSecondsParsed, getLog());
             Result result = executor.execute(query);
             processResult(result);
 
