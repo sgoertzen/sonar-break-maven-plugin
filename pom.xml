@@ -20,7 +20,7 @@
     <scm>
         <connection>scm:git:git@github.com:sgoertzen/sonar-break-maven-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:sgoertzen/sonar-break-maven-plugin.git</developerConnection>
-        <url>git@github.com:sgoertzen/sonar-break-maven-plugin.git</url>
+        <url>https://github.com/sgoertzen/sonar-break-maven-plugin</url>
     </scm>
     <licenses>
         <license>
