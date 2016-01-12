@@ -33,7 +33,7 @@ public class SonarBreakMojo extends AbstractMojo {
         MavenProject mavenProject = getMavenProject();
         String version = mavenProject.getVersion();
         String resourceName = String.format("%s:%s", mavenProject.getGroupId(), mavenProject.getArtifactId());
-        getLog().info("Fetching details on " + resourceName + ", version: " + version);
+        getLog().info("Querying sonar for analysis on " + resourceName + ", version: " + version);
 
         try {
             Query query = new Query(resourceName, version);

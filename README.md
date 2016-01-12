@@ -10,7 +10,7 @@ To include in your project, update your pom.xml with the following:
 
     <dependencies>
         <dependency>
-            <groupId>com.sgoertzen.maven</groupId>
+            <groupId>com.github.sgoertzen</groupId>
             <artifactId>sonarbreak</artifactId>
             <version>1.0</version>
         </dependency>
@@ -19,7 +19,7 @@ To include in your project, update your pom.xml with the following:
     <build>
         <plugins>
             <plugin>
-                <groupId>com.sgoertzen.maven</groupId>
+                <groupId>com.github.sgoertzen</groupId>
                 <artifactId>sonarbreak</artifactId>
                 <version>1.0</version>
                 <configuration>
@@ -39,7 +39,7 @@ These parameter goes into the configuration section so the build piece of your p
     <build>
         <plugins>
             <plugin>
-                <groupId>com.sgoertzen.maven</groupId>
+                <groupId>com.github.sgoertzen</groupId>
                 <artifactId>sonarbreak</artifactId>
                 <version>1.0</version>
                 <configuration>
