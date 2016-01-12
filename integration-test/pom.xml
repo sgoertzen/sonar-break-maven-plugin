@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.sgoertzen.maven.test</groupId>
+    <groupId>com.github.sgoertzen.test</groupId>
     <artifactId>sonar-break-test</artifactId>
     <version>1.3</version>
 
@@ -18,7 +18,7 @@
                 <version>2.7.1</version>
             </plugin>
             <plugin>
-                <groupId>com.sgoertzen.maven</groupId>
+                <groupId>com.github.sgoertzen</groupId>
                 <artifactId>sonar-break-maven-plugin</artifactId>
                 <version>1.0</version>
                 <configuration>
