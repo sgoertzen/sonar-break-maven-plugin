@@ -2,20 +2,22 @@
 
 mvn clean install
 
+version=5.3
+
 # Fetch Sonar
-curl -L -O https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-5.2.zip
+curl -L -O https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-${version}.zip
 # and extract
-unzip sonarqube-5.2.zip
+unzip sonarqube-${version}.zip
 
 # Start up sonar
 if [ "$(uname)" == "Darwin" ]; then
-    ./sonarqube-5.2/bin/macosx-universal-64/sonar.sh start
+    ./sonarqube-${version}/bin/macosx-universal-64/sonar.sh start
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     echo "Starting Sonar on linux"
-    ./sonarqube-5.2/bin/linux-x86-64/sonar.sh console &
+    ./sonarqube-${version}/bin/linux-x86-64/sonar.sh console &
 
     # Travis has errors using the "sonar.sh start" command.  Instead we directly invoke the wroapper.
-    #"$(pwd)/sonarqube-5.2/bin/linux-x86-64/./wrapper" "$(pwd)/sonarqube-5.2/conf/wrapper.conf" wrapper.syslog.ident=SonarQube wrapper.pidfile="$(pwd)/sonarqube-5.2/bin/linux-x86-64/./SonarQube.pid" wrapper.daemonize=TRUE
+    #"$(pwd)/sonarqube-${version}/bin/linux-x86-64/./wrapper" "$(pwd)/sonarqube-${version}/conf/wrapper.conf" wrapper.syslog.ident=SonarQube wrapper.pidfile="$(pwd)/sonarqube-${version}/bin/linux-x86-64/./SonarQube.pid" wrapper.daemonize=TRUE
 fi
 
 # Wait for sonar to become available (up to one minute)
@@ -26,11 +28,11 @@ mvn clean install sonar:sonar sonar-break:sonar-break
 
 # Stop sonar
 if [ "$(uname)" == "Darwin" ]; then
-    ./sonarqube-5.2/bin/macosx-universal-64/sonar.sh stop
+    ./sonarqube-${version}/bin/macosx-universal-64/sonar.sh stop
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-    ./sonarqube-5.2/bin/linux-x86-64/sonar.sh stop
+    ./sonarqube-${version}/bin/linux-x86-64/sonar.sh stop
 fi
 
 # Clean up sonar
-rm -rf sonarqube-5.2
-rm -rf sonarqube-5.2.zip
+rm -rf sonarqube-${version}
+rm -rf sonarqube-${version}.zip
