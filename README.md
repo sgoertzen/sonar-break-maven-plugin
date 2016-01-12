@@ -79,8 +79,8 @@ Details:
 * Tests this plugin by fetching the sonar status
 
 ## Hosting
-[Artifact from this code](https://oss.sonatype.org/content/groups/public/com/github/sgoertzen/sonar-break-maven-plugin)
-[More history here](https://oss.sonatype.org/#nexus-search;quick~sonar-break-maven-plugin)
+The plugin is hosted on [SonaType Nexus](https://oss.sonatype.org/content/groups/public/com/github/sgoertzen/sonar-break-maven-plugin) with the full history shown 
+[here](https://oss.sonatype.org/#nexus-search;quick~sonar-break-maven-plugin)
 
 ## Development
 You can build this plugin yourself by executing 
