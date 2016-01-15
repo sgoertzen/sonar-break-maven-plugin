@@ -1,6 +1,6 @@
 # sonar-break-maven-plugin
 
-[![Build Status](https://travis-ci.org/sgoertzen/sonar-break-maven-plugin.svg?branch=master)](https://travis-ci.org/sgoertzen/sonar-break-maven-plugin)
+[![Build Status](https://travis-ci.org/sgoertzen/sonar-break-maven-plugin.svg?branch=master)](https://travis-ci.org/sgoertzen/sonar-break-maven-plugin)  [![Dependency Status](https://www.versioneye.com/user/projects/56983e26af789b0027001e5b/badge.svg?style=flat)](https://www.versioneye.com/user/projects/56983e26af789b0027001e5b)
 
 A maven plugin that will fail a maven build if sonar reports errors with your project.  Tested with SonarQube 5.2 and 5.3.
 
