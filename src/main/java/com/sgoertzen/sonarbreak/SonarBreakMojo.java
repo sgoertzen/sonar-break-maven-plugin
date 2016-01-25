@@ -26,7 +26,7 @@ public class SonarBreakMojo extends AbstractMojo {
     @Parameter(property = "waitForProcessingSeconds", defaultValue = "300")
     protected String waitForProcessingSeconds;
 
-    private static final String CONDITION_FORMAT = "%s: %s level at %s (must be beyond %s).";
+    private static final String CONDITION_FORMAT = "%s: %s level at %s (expected level of %s).";
 
     public void execute() throws MojoExecutionException
     {
