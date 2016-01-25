@@ -6,7 +6,7 @@
 
     <groupId>com.github.sgoertzen</groupId>
     <artifactId>sonar-break-maven-plugin</artifactId>
-    <version>1.2</version>
+    <version>1.1.2</version>
     <packaging>maven-plugin</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -91,7 +91,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
+                <version>3.5</version>
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
