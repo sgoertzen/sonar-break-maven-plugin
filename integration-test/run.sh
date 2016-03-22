@@ -5,9 +5,11 @@ mvn clean install
 version=5.3
 
 # Fetch Sonar
-curl -L -O https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-${version}.zip
-# and extract
-unzip sonarqube-${version}.zip
+if [ ! -f "sonarqube-${version}.zip" ]; then
+    curl -L -O https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-${version}.zip
+    # and extract
+    unzip sonarqube-${version}.zip
+fi
 
 # Start up sonar
 if [ "$(uname)" == "Darwin" ]; then
@@ -35,4 +37,4 @@ fi
 
 # Clean up sonar
 rm -rf sonarqube-${version}
-rm -rf sonarqube-${version}.zip
+# We leave the zip file around so it can be reused for the next run without downloading
