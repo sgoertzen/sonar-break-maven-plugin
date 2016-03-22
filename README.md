@@ -84,7 +84,14 @@ The plugin is hosted on [SonaType Nexus](https://oss.sonatype.org/content/groups
 
 ## Development
 You can build this plugin yourself by executing 
-    mvn clean package
+```
+mvn clean package
+```
+Integration tests can be run by
+```
+cd integration-test
+./run.sh
+```
 
 ### Signing
 If you run "mvn verify" or "mvn install" it will attempt to sign the output using gpg.  For testing purposes you may wish to just remove this step from the build.  To do this you just need to remove the execution tags on the "maven-gpg-plugin" plugin in the main pom file. 
