@@ -14,22 +14,28 @@ import java.util.Map;
 /**
  * Custom maven plugin to break a maven build if sonar rules are not met.
  */
-@Mojo( name = "sonar-break", aggregator = true )
+@Mojo(name = "sonar-break", aggregator = true)
 public class SonarBreakMojo extends AbstractMojo {
 
+    private static final String CONDITION_FORMAT = "%s: %s level at %s (expected level of %s).";
     @Parameter(property = "sonarServer", required = true)
     protected String sonarServer;
-
     @Parameter(property = "sonarLookBackSeconds", defaultValue = "60")
     protected String sonarLookBackSeconds;
-
     @Parameter(property = "waitForProcessingSeconds", defaultValue = "300")
     protected String waitForProcessingSeconds;
 
-    private static final String CONDITION_FORMAT = "%s: %s level at %s (expected level of %s).";
+    protected static String buildErrorString(List<Condition> conditions) {
+        StringBuilder builder = new StringBuilder();
+        for (Condition condition : conditions) {
+            builder.append("\n");
+            String statusLine = String.format(CONDITION_FORMAT, condition.getStatus(), condition.getName(), condition.getActualLevel(), condition.getErrorLevel());
+            builder.append(statusLine);
+        }
+        return builder.toString();
+    }
 
-    public void execute() throws MojoExecutionException
-    {
+    public void execute() throws MojoExecutionException {
         MavenProject mavenProject = getMavenProject();
         String version = mavenProject.getVersion();
         String resourceName = String.format("%s:%s", mavenProject.getGroupId(), mavenProject.getArtifactId());
@@ -52,29 +58,26 @@ public class SonarBreakMojo extends AbstractMojo {
         try {
             getLog().debug(String.format("Parameter %s set to value of %s", name, value));
             return Integer.parseInt(value);
-        }
-        catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             String message = String.format("Error while parsing the %s.  The value of %s is not an integer.", name, value);
             throw new MojoExecutionException(message, e);
         }
     }
 
-
     private MavenProject getMavenProject() throws MojoExecutionException {
         Map pluginContext = this.getPluginContext();
         Object project = pluginContext.get("project");
-        if (!MavenProject.class.isInstance(project))
-        {
+        if (!MavenProject.class.isInstance(project)) {
             throw new MojoExecutionException("Unable to get the group and artifact id of the building project.  Maven did not pass the expected information into the plugin.");
         }
-        return (MavenProject)project;
+        return (MavenProject) project;
     }
 
     private void processResult(Result result) throws MojoExecutionException {
         getLog().info("Got a result of " + result.getStatus());
 
         final String errorString = buildErrorString(result.getConditions());
-        switch (result.getStatus()){
+        switch (result.getStatus()) {
             case ERROR:
                 getLog().error(errorString);
                 throw new MojoExecutionException("Build did not past sonar tests.  " + errorString);
@@ -87,15 +90,5 @@ public class SonarBreakMojo extends AbstractMojo {
             default:
                 throw new MojoExecutionException("Unknown result state encountered: " + result.getStatus());
         }
-    }
-
-    protected static String buildErrorString(List<Condition> conditions) {
-        StringBuilder builder = new StringBuilder();
-        for (Condition condition : conditions){
-            builder.append("\n");
-            String statusLine = String.format(CONDITION_FORMAT, condition.getStatus(), condition.getName(), condition.getActualLevel(), condition.getErrorLevel());
-            builder.append(statusLine);
-        }
-        return builder.toString();
     }
 }
