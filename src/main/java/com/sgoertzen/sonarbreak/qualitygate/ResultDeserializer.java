@@ -24,7 +24,7 @@ public class ResultDeserializer extends JsonDeserializer {
     public Object deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         Result result = new Result();
 
-        JsonNode root= jsonParser.readValueAsTree();
+        JsonNode root = jsonParser.readValueAsTree();
         result.setId(getText(root, "id"));
         result.setKey(getText(root, "key"));
         result.setName(getText(root, "name"));
@@ -52,7 +52,8 @@ public class ResultDeserializer extends JsonDeserializer {
             String level = getText(jsonNode, "level");
             result.setStatus(ConditionStatus.forValue(level));
 
-            List<Condition> conditions = map2.convertValue(jsonNode.get("conditions"), new TypeReference<List<Condition>>() {});
+            List<Condition> conditions = map2.convertValue(jsonNode.get("conditions"), new TypeReference<List<Condition>>() {
+            });
             result.setConditions(conditions);
         }
         return result;
@@ -60,13 +61,14 @@ public class ResultDeserializer extends JsonDeserializer {
 
     /**
      * Get the text from child node with the given name.  Returns null if child node does not exist.
-     * @param node Node to search
+     *
+     * @param node         Node to search
      * @param propertyName Name of the child node
      * @return The text value of the child node
      */
-    private String getText(JsonNode node, String propertyName){
+    private String getText(JsonNode node, String propertyName) {
         JsonNode childNode = node.get(propertyName);
-        if (childNode == null){
+        if (childNode == null) {
             return null;
         }
         return childNode.asText();

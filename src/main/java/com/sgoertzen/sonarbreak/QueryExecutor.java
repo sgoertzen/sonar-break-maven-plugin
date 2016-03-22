@@ -37,68 +37,16 @@ public class QueryExecutor {
     /**
      * Creates a new executor for running queries against sonar.
      *
-     * @param sonarServer Fully qualified URL to the sonar server
-     * @param sonarLookBackSeconds Amount of time to look back into sonar history for the results of this build
+     * @param sonarServer              Fully qualified URL to the sonar server
+     * @param sonarLookBackSeconds     Amount of time to look back into sonar history for the results of this build
      * @param waitForProcessingSeconds Amount of time to wait for sonar to finish processing the job
-     *@param log Log for logging  @return Results indicating if the build passed the sonar quality gate checks  @throws MalformedURLException
+     * @param log                      Log for logging  @return Results indicating if the build passed the sonar quality gate checks  @throws MalformedURLException
      */
     public QueryExecutor(String sonarServer, int sonarLookBackSeconds, int waitForProcessingSeconds, Log log) throws MalformedURLException {
         this.sonarURL = new URL(sonarServer);
         this.sonarLookBackSeconds = sonarLookBackSeconds;
         this.waitForProcessingSeconds = waitForProcessingSeconds;
         this.log = log;
-    }
-
-    /**
-     * Execute the given query on the specified sonar server.
-     * @param query The query specifying the project and version of the build
-     * @throws SonarBreakException
-     * @throws IOException
-     */
-    public Result execute(Query query) throws SonarBreakException, IOException {
-        URL queryURL = buildURL(sonarURL, query);
-        log.debug("Built a sonar query url of: " + queryURL.toString());
-
-        if (!isURLAvailable(queryURL, SONAR_CONNECTION_RETRIES)){
-            throw new SonarBreakException(String.format("Unable to get a valid response after %d tries", SONAR_CONNECTION_RETRIES));
-        }
-
-        return fetchSonarStatusWithRetries(queryURL, query.getVersion());
-    }
-
-    /**
-     * Get the status from sonar for the currently executing build.  This waits for sonar to complete its processing
-     * before returning the results.
-     *
-     * @param queryURL The sonar URL to get the results from
-     * @param version The current project version number
-     * @return Matching result object for this build
-     * @throws IOException
-     * @throws SonarBreakException
-     */
-    private Result fetchSonarStatusWithRetries(URL queryURL, String version) throws IOException, SonarBreakException {
-        DateTime oneMinuteAgo = DateTime.now().minusSeconds(sonarLookBackSeconds);
-        DateTime waitUntil = DateTime.now().plusSeconds(waitForProcessingSeconds);
-        do {
-            Result result = fetchSonarStatus(queryURL);
-            if (result.getVersion().equals(version) && result.getDatetime().isAfter(oneMinuteAgo)) {
-                log.debug("Found a sonar job run that matches version and in the correct time frame");
-                return result;
-            }
-            try {
-                String message = String.format("Sleeping while waiting for sonar to process job.  Target Version: %s.  " +
-                        "Sonar reporting Version: %s.  Looking back until: %s  Last result time: %s", version,
-                        result.getVersion(), oneMinuteAgo.toString(), result.getDatetime().toString());
-                log.debug(message);
-                Thread.sleep(SONAR_PROCESSING_WAIT_TIME);
-            } catch (InterruptedException e) {
-                // Do nothing
-            }
-        } while (!waitUntil.isBeforeNow());
-
-        String message = String.format("Timed out while waiting for Sonar.  Waited %d seconds.  This time can be extended " +
-                        "using the \"waitForProcessingSeconds\" configuration parameter.", waitForProcessingSeconds);
-        throw new SonarBreakException(message);
     }
 
     /**
@@ -119,53 +67,22 @@ public class QueryExecutor {
 
             String response = IOUtils.toString(in);
             return parseResponse(response);
-        }
-        finally {
+        } finally {
             IOUtils.closeQuietly(in);
         }
-    }
-
-    /**
-     * Pings a HTTP URL. This effectively sends a HEAD request and returns <code>true</code> if the response code is in
-     * the 200-399 range.
-     * @param url The HTTP URL to be pinged.
-     * @return <code>true</code> if the given HTTP URL has returned response code 200-399 on a HEAD request,
-     * otherwise <code>false</code>.
-     */
-    protected boolean isURLAvailable(URL url, int retryCount) throws IOException {
-        boolean serviceFound = false;
-        for (int i=0; i<retryCount; i++) {
-            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-            connection.setRequestMethod("HEAD");
-            int responseCode = connection.getResponseCode();
-            if (200 <= responseCode && responseCode <= 399) {
-                log.debug(String.format("Got a valid response of %d from %s", responseCode, url));
-                serviceFound = true;
-                break;
-            }
-            else {
-                try {
-                    log.debug("Sleeping while waiting for sonar to become available");
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    // do nothing
-                }
-            }
-        }
-        return serviceFound;
     }
 
     /**
      * Creates a url for the specified quality gate query
      *
      * @param sonarURL The sonar server we will be querying
-     * @param query Holds details on the query we want to make
+     * @param query    Holds details on the query we want to make
      * @return A URL object representing the query
      * @throws MalformedURLException
      * @throws IllegalArgumentException
      */
     protected static URL buildURL(URL sonarURL, Query query) throws MalformedURLException, IllegalArgumentException {
-        if (query.getResource() == null || query.getResource().length() == 0){
+        if (query.getResource() == null || query.getResource().length() == 0) {
             throw new IllegalArgumentException("No resource specified in the Query");
         }
         String sonarPathWithResource = String.format(SONAR_FORMAT_PATH, query.getResource());
@@ -185,13 +102,97 @@ public class QueryExecutor {
         mapper.setDateFormat(df);
         List<Result> results;
         try {
-            results = mapper.readValue(response, new TypeReference<List<Result>>() {});
+            results = mapper.readValue(response, new TypeReference<List<Result>>() {
+            });
         } catch (IOException e) {
             throw new SonarBreakException("Unable to parse the json into a List of QualityGateResults.  Json is: " + response, e);
         }
-        if (results == null || results.size() != 1){
+        if (results == null || results.size() != 1) {
             throw new SonarBreakException("Unable to deserialize JSON response: " + response);
         }
         return results.get(0);
+    }
+
+    /**
+     * Execute the given query on the specified sonar server.
+     *
+     * @param query The query specifying the project and version of the build
+     * @throws SonarBreakException
+     * @throws IOException
+     */
+    public Result execute(Query query) throws SonarBreakException, IOException {
+        URL queryURL = buildURL(sonarURL, query);
+        log.debug("Built a sonar query url of: " + queryURL.toString());
+
+        if (!isURLAvailable(queryURL, SONAR_CONNECTION_RETRIES)) {
+            throw new SonarBreakException(String.format("Unable to get a valid response after %d tries", SONAR_CONNECTION_RETRIES));
+        }
+
+        return fetchSonarStatusWithRetries(queryURL, query.getVersion());
+    }
+
+    /**
+     * Get the status from sonar for the currently executing build.  This waits for sonar to complete its processing
+     * before returning the results.
+     *
+     * @param queryURL The sonar URL to get the results from
+     * @param version  The current project version number
+     * @return Matching result object for this build
+     * @throws IOException
+     * @throws SonarBreakException
+     */
+    private Result fetchSonarStatusWithRetries(URL queryURL, String version) throws IOException, SonarBreakException {
+        DateTime oneMinuteAgo = DateTime.now().minusSeconds(sonarLookBackSeconds);
+        DateTime waitUntil = DateTime.now().plusSeconds(waitForProcessingSeconds);
+        do {
+            Result result = fetchSonarStatus(queryURL);
+            if (result.getVersion().equals(version) && result.getDatetime().isAfter(oneMinuteAgo)) {
+                log.debug("Found a sonar job run that matches version and in the correct time frame");
+                return result;
+            }
+            try {
+                String message = String.format("Sleeping while waiting for sonar to process job.  Target Version: %s.  " +
+                                "Sonar reporting Version: %s.  Looking back until: %s  Last result time: %s", version,
+                        result.getVersion(), oneMinuteAgo.toString(), result.getDatetime().toString());
+                log.debug(message);
+                Thread.sleep(SONAR_PROCESSING_WAIT_TIME);
+            } catch (InterruptedException e) {
+                // Do nothing
+            }
+        } while (!waitUntil.isBeforeNow());
+
+        String message = String.format("Timed out while waiting for Sonar.  Waited %d seconds.  This time can be extended " +
+                "using the \"waitForProcessingSeconds\" configuration parameter.", waitForProcessingSeconds);
+        throw new SonarBreakException(message);
+    }
+
+    /**
+     * Pings a HTTP URL. This effectively sends a HEAD request and returns <code>true</code> if the response code is in
+     * the 200-399 range.
+     *
+     * @param url The HTTP URL to be pinged.
+     * @return <code>true</code> if the given HTTP URL has returned response code 200-399 on a HEAD request,
+     * otherwise <code>false</code>.
+     */
+    protected boolean isURLAvailable(URL url, int retryCount) throws IOException {
+        boolean serviceFound = false;
+        for (int i = 0; i < retryCount; i++) {
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("HEAD");
+            int responseCode = connection.getResponseCode();
+            if (200 <= responseCode && responseCode <= 399) {
+                log.debug(String.format("Got a valid response of %d from %s", responseCode, url));
+                serviceFound = true;
+                break;
+            } else {
+                try {
+                    log.debug("Sleeping while waiting for sonar to become available");
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    // do nothing
+                }
+            }
+        }
+        return serviceFound;
     }
 }

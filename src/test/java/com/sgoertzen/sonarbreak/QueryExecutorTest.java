@@ -23,7 +23,7 @@ public class QueryExecutorTest {
         assertEquals("URL", "https://sonar.test.com/api/resources/index?resource=some-service&metrics=quality_gate_details", url.toString());
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void buildURLNoResourceTest() throws IllegalArgumentException, MalformedURLException {
         URL sonarURL = new URL("https://sonar.test.com");
         Query query = new Query("", "1.0");
@@ -69,7 +69,7 @@ public class QueryExecutorTest {
         Result result = QueryExecutor.parseResponse(input);
         assertEquals("Level does not match", ConditionStatus.ERROR, result.getStatus());
 
-        List<Condition> conditions =  result.getConditions();
+        List<Condition> conditions = result.getConditions();
         assertNotNull("Conditions should not be null", conditions);
         assertEquals("Number of conditions does not match", 3, conditions.size());
 

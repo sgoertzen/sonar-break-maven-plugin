@@ -8,7 +8,7 @@ public class Query {
     private String resource;
     private String version;
 
-    public Query(String resource, String version){
+    public Query(String resource, String version) {
         setResource(resource);
         setVersion(version);
     }
