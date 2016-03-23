@@ -1,24 +1,24 @@
 package com.sgoertzen.sonarbreak.qualitygate;
 
 /**
- * A query to check the quality gate status for a resource in sonar
+ * A query to check the quality gate status for a sonarKey in sonar
  */
 public class Query {
 
-    private String resource;
+    private String sonarKey;
     private String version;
 
-    public Query(String resource, String version) {
-        setResource(resource);
+    public Query(String sonarKey, String version) {
+        setSonarKey(sonarKey);
         setVersion(version);
     }
 
-    public String getResource() {
-        return resource;
+    public String getSonarKey() {
+        return sonarKey;
     }
 
-    public void setResource(String resource) {
-        this.resource = resource;
+    public void setSonarKey(String sonarKey) {
+        this.sonarKey = sonarKey;
     }
 
     public String getVersion() {

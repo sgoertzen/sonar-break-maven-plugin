@@ -24,6 +24,8 @@ public class SonarBreakMojo extends AbstractMojo {
     protected String sonarLookBackSeconds;
     @Parameter(property = "waitForProcessingSeconds", defaultValue = "300")
     protected String waitForProcessingSeconds;
+    @Parameter(property = "sonar.projectKey", defaultValue = "")
+    protected String sonarKey;
 
     protected static String buildErrorString(List<Condition> conditions) {
         StringBuilder builder = new StringBuilder();
@@ -38,11 +40,14 @@ public class SonarBreakMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException {
         MavenProject mavenProject = getMavenProject();
         String version = mavenProject.getVersion();
-        String resourceName = String.format("%s:%s", mavenProject.getGroupId(), mavenProject.getArtifactId());
-        getLog().info("Querying sonar for analysis on " + resourceName + ", version: " + version);
+        if (sonarKey == null || sonarKey.equals("")) {
+
+            sonarKey = String.format("%s:%s", mavenProject.getGroupId(), mavenProject.getArtifactId());
+        }
+        getLog().info("Querying sonar for analysis on " + sonarKey + ", version: " + version);
 
         try {
-            Query query = new Query(resourceName, version);
+            Query query = new Query(sonarKey, version);
             final int sonarLookBackSecondsParsed = parseParam(sonarLookBackSeconds, "sonarLookBackSeconds");
             final int waitForProcessingSecondsParsed = parseParam(waitForProcessingSeconds, "waitForProcessingSeconds");
             QueryExecutor executor = new QueryExecutor(sonarServer, sonarLookBackSecondsParsed, waitForProcessingSecondsParsed, getLog());

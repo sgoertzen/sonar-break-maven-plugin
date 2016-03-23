@@ -1,4 +1,4 @@
-public class IntegrationTest {
+public class CustomKey {
     public static void main(String[] args) {
         try {
             int unused = 3;
