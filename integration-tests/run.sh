@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 
-mvn clean install
+# version of sonarqube to use for the test
+version=5.4
 
-version=5.3
+cd .. && mvn clean install && cd integration-tests
 
 # Fetch Sonar
 if [ ! -f "sonarqube-${version}.zip" ]; then
     curl -L -O https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-${version}.zip
-    # and extract
-    unzip sonarqube-${version}.zip
 fi
+# and extract
+unzip sonarqube-${version}.zip
 
 # Start up sonar
 if [ "$(uname)" == "Darwin" ]; then
@@ -26,7 +27,14 @@ fi
 for i in {1..20}; do if (curl -I http://127.0.0.1:9000 2>/dev/null | grep -q 200); then echo "Sonar up and running"; break; fi; echo "Waiting for sonar to become available"; sleep 3; done
 
 # Run our tests
-mvn clean install sonar:sonar sonar-break:sonar-break
+for path in ./*; do
+    [ -d "${path}" ] || continue # if not a directory, skip
+    dirname="$(basename "${path}")"
+    [ "${dirname}" = "sonarqube-${version}" ] && continue # if sonarqube, skip
+    cd ${dirname}
+    mvn clean install sonar:sonar sonar-break:sonar-break
+    cd ..
+done
 
 # Stop sonar
 if [ "$(uname)" == "Darwin" ]; then

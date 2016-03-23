@@ -82,10 +82,10 @@ public class QueryExecutor {
      * @throws IllegalArgumentException
      */
     protected static URL buildURL(URL sonarURL, Query query) throws MalformedURLException, IllegalArgumentException {
-        if (query.getResource() == null || query.getResource().length() == 0) {
+        if (query.getSonarKey() == null || query.getSonarKey().length() == 0) {
             throw new IllegalArgumentException("No resource specified in the Query");
         }
-        String sonarPathWithResource = String.format(SONAR_FORMAT_PATH, query.getResource());
+        String sonarPathWithResource = String.format(SONAR_FORMAT_PATH, query.getSonarKey());
         return new URL(sonarURL, sonarPathWithResource);
     }
 
