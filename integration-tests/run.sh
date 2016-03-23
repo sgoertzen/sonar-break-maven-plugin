@@ -30,6 +30,7 @@ for i in {1..20}; do if (curl -I http://127.0.0.1:9000 2>/dev/null | grep -q 200
 for path in ./*; do
     [ -d "${path}" ] || continue # if not a directory, skip
     dirname="$(basename "${path}")"
+    [ "${dirname}" = "sonarqube-${version}" ] && continue # if sonarqube, skip
     cd ${dirname}
     mvn clean install sonar:sonar sonar-break:sonar-break
     cd ..
