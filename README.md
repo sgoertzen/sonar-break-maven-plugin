@@ -14,7 +14,7 @@ To include in your project, update your pom.xml with the following:
         <dependency>
             <groupId>com.github.sgoertzen</groupId>
             <artifactId>sonarbreak</artifactId>
-            <version>1.1.2</version>
+            <version>1.1.3</version>
         </dependency>
     </dependencies>
 
@@ -23,7 +23,7 @@ To include in your project, update your pom.xml with the following:
             <plugin>
                 <groupId>com.github.sgoertzen</groupId>
                 <artifactId>sonarbreak</artifactId>
-                <version>1.1.2</version>
+                <version>1.1.3</version>
                 <configuration>
                     <sonarServer>https://sonar.yourserver.com</sonarServer>
                 </configuration>
@@ -43,7 +43,7 @@ These parameter goes into the configuration section so the build piece of your p
             <plugin>
                 <groupId>com.github.sgoertzen</groupId>
                 <artifactId>sonarbreak</artifactId>
-                <version>1.1</version>
+                <version>1.1.3</version>
                 <configuration>
                     <sonarServer>https://sonar.yourserver.com</sonarServer>
                     <sonarLookBackSeconds>60</sonarLookBackSeconds>
