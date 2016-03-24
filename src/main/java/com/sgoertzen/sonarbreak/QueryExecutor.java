@@ -124,7 +124,7 @@ public class QueryExecutor {
         URL queryURL = buildURL(sonarURL, query);
         log.debug("Built a sonar query url of: " + queryURL.toString());
 
-        if (!isURLAvailable(queryURL, SONAR_CONNECTION_RETRIES)) {
+        if (!isURLAvailable(sonarURL, SONAR_CONNECTION_RETRIES)) {
             throw new SonarBreakException(String.format("Unable to get a valid response after %d tries", SONAR_CONNECTION_RETRIES));
         }
 
