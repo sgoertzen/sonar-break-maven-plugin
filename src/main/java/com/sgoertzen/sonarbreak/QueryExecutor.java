@@ -58,17 +58,21 @@ public class QueryExecutor {
      * @throws IOException
      * @throws SonarBreakException
      */
-    private static Result fetchSonarStatus(URL queryURL) throws IOException, SonarBreakException {
-        InputStream in = null;
-        try {
-            URLConnection connection = queryURL.openConnection();
-            connection.setRequestProperty("Accept", "application/json");
-            in = connection.getInputStream();
+    private Result fetchSonarStatus(URL queryURL) throws IOException, SonarBreakException {
+        if (!isURLAvailable(queryURL, 1)) {
+            return null;
+        } else {
+            InputStream in = null;
+            try {
+                URLConnection connection = queryURL.openConnection();
+                connection.setRequestProperty("Accept", "application/json");
+                in = connection.getInputStream();
 
-            String response = IOUtils.toString(in);
-            return parseResponse(response);
-        } finally {
-            IOUtils.closeQuietly(in);
+                String response = IOUtils.toString(in);
+                return parseResponse(response);
+            } finally {
+                IOUtils.closeQuietly(in);
+            }
         }
     }
 
@@ -146,14 +150,13 @@ public class QueryExecutor {
         DateTime waitUntil = DateTime.now().plusSeconds(waitForProcessingSeconds);
         do {
             Result result = fetchSonarStatus(queryURL);
-            if (result.getVersion().equals(version) && result.getDatetime().isAfter(oneMinuteAgo)) {
+            if (result != null && result.getVersion().equals(version) && result.getDatetime().isAfter(oneMinuteAgo)) {
                 log.debug("Found a sonar job run that matches version and in the correct time frame");
                 return result;
             }
             try {
-                String message = String.format("Sleeping while waiting for sonar to process job.  Target Version: %s.  " +
-                                "Sonar reporting Version: %s.  Looking back until: %s  Last result time: %s", version,
-                        result.getVersion(), oneMinuteAgo.toString(), result.getDatetime().toString());
+                String message = String.format("Sleeping while waiting for sonar to process job.  Target Version: %s.  "
+                        + "Looking back until: %s", version, oneMinuteAgo.toString());
                 log.debug(message);
                 Thread.sleep(SONAR_PROCESSING_WAIT_TIME);
             } catch (InterruptedException e) {
@@ -186,8 +189,10 @@ public class QueryExecutor {
                 break;
             } else {
                 try {
-                    log.debug("Sleeping while waiting for sonar to become available");
-                    Thread.sleep(2000);
+                    if (retryCount != 1) {
+                        log.debug("Sleeping while waiting for sonar to become available");
+                        Thread.sleep(2000);
+                    }
                 } catch (InterruptedException e) {
                     // do nothing
                 }
