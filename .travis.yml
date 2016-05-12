@@ -4,5 +4,6 @@ jdk:
 install: true
 script:
  - mvn clean package
- - ./integration-tests/run.sh
+ - cd integration-tests
+ - ./run.sh
 
