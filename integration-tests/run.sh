@@ -26,7 +26,7 @@ function exitWithError {
 
 trap finish EXIT
 
-cd .. && mvn clean install && cd integration-tests
+#cd .. && mvn clean install && cd integration-tests
 
 # Fetch Sonar
 if [ ! -f "sonarqube-${version}.zip" ]; then
