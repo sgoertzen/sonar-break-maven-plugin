@@ -40,7 +40,7 @@ if [ "$(uname)" == "Darwin" ]; then
     ./sonarqube-${version}/bin/macosx-universal-64/sonar.sh start
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     echo "Starting Sonar on linux"
-    ./sonarqube-${version}/bin/linux-x86-64/sonar.sh start
+    ./sonarqube-${version}/bin/linux-x86-32/sonar.sh start
     #console &
 
     # Travis has errors using the "sonar.sh start" command.  Instead we directly invoke the wroapper.
@@ -52,7 +52,7 @@ for i in {1..20}; do if (curl -I http://127.0.0.1:9000 2>/dev/null | grep -q 200
 
 ps -A | grep sonar
 
-./sonarqube-${version}/bin/linux-x86-64/sonar.sh status
+./sonarqube-${version}/bin/linux-x86-32/sonar.sh status
 
 # Add a condition in for zero critical issues
 #curl -X POST -H "Authorization: Basic YWRtaW46YWRtaW4=" -H "Cache-Control: no-cache" -H "Postman-Token: a1002e9f-7c26-b179-08de-e0066da5f318" -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" -F "gateId=1" -F "error=0" -F "metric=critical_violations" -F "op=GT" "http://localhost:9000/api/qualitygates/create_condition"
