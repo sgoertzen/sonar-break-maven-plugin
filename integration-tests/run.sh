@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # version of sonarqube to use for the test
-version=5.4
+version=5.5
 
 function finish {
     # Stop sonar
