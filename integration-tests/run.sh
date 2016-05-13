@@ -35,6 +35,11 @@ fi
 # and extract
 unzip sonarqube-${version}.zip
 
+echo "Current directory"
+pwd
+
+ls sonarqube-5.5/bin/linux-x86-32
+
 # Start up sonar
 if [ "$(uname)" == "Darwin" ]; then
     ./sonarqube-${version}/bin/macosx-universal-64/sonar.sh start
