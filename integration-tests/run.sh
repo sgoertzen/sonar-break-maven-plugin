@@ -58,7 +58,7 @@ if [ "$(uname)" == "Darwin" ]; then
     ./sonarqube-${version}/bin/macosx-universal-64/sonar.sh start
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     echo "Starting Sonar on linux"
-    ./sonarqube-${version}/bin/linux-x86-64/sonar.sh console
+    ./sonarqube-${version}/bin/linux-x86-64/sonar.sh start
 
     # Travis has errors using the "sonar.sh start" command.  Instead we directly invoke the wroapper.
     #"./sonarqube-${version}/bin/linux-x86-64/wrapper" "$(pwd)/sonarqube-${version}/conf/wrapper.conf" wrapper.syslog.ident=SonarQube wrapper.pidfile="$(pwd)/sonarqube-${version}/bin/linux-x86-64/SonarQube.pid" wrapper.daemonize=TRUE
