@@ -20,7 +20,7 @@
             <plugin>
                 <groupId>com.github.sgoertzen</groupId>
                 <artifactId>sonar-break-maven-plugin</artifactId>
-                <version>1.1.2</version>
+                <version>1.1.4</version>
                 <configuration>
                     <sonarServer>http://localhost:9000/</sonarServer>
                 </configuration>
