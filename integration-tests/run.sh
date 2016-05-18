@@ -47,6 +47,8 @@ ls ./sonarqube-${version}/bin/linux-x86-64
 #echo "List of files in web/config/envs"
 #ls ./sonarqube-${version}/web/WEB-INF/config/environments/
 
+unset RAILS_ENV
+
 echo "env variables"
 printenv
 
