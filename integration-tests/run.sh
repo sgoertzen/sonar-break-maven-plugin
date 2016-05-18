@@ -38,17 +38,17 @@ unzip sonarqube-${version}.zip
 echo "Current directory"
 pwd
 
-ls sonarqube-5.5/bin/linux-x86-32
+ls ./sonarqube-${version}/bin/linux-x86-64
 
 # Start up sonar
 if [ "$(uname)" == "Darwin" ]; then
     ./sonarqube-${version}/bin/macosx-universal-64/sonar.sh start
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     echo "Starting Sonar on linux"
-    ./sonarqube-${version}/bin/linux-x86-32/sonar.sh console
+    ./sonarqube-${version}/bin/linux-x86-64/sonar.sh console
 
     # Travis has errors using the "sonar.sh start" command.  Instead we directly invoke the wroapper.
-    #"./sonarqube-${version}/bin/linux-x86-32/wrapper" "$(pwd)/sonarqube-${version}/conf/wrapper.conf" wrapper.syslog.ident=SonarQube wrapper.pidfile="$(pwd)/sonarqube-${version}/bin/linux-x86-32/SonarQube.pid" wrapper.daemonize=TRUE
+    #"./sonarqube-${version}/bin/linux-x86-64/wrapper" "$(pwd)/sonarqube-${version}/conf/wrapper.conf" wrapper.syslog.ident=SonarQube wrapper.pidfile="$(pwd)/sonarqube-${version}/bin/linux-x86-64/SonarQube.pid" wrapper.daemonize=TRUE
 fi
 
 # Wait for sonar to become available (up to one minute)
