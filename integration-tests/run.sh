@@ -38,15 +38,17 @@ unzip sonarqube-${version}.zip
 echo "Current directory"
 pwd
 
-echo "Copy the config for test.rb"
-cp ./sonarqube-${version}/web/WEB-INF/config/environments/development.rb ./sonarqube-${version}/web/WEB-INF/config/environments/test.rb
+#echo "Copy the config for test.rb"
+#cp ./sonarqube-${version}/web/WEB-INF/config/environments/development.rb ./sonarqube-${version}/web/WEB-INF/config/environments/test.rb
 
 echo "List of files in bin/linux64"
 ls ./sonarqube-${version}/bin/linux-x86-64
 
-echo "List of files in web/config/envs"
-ls ./sonarqube-${version}/web/WEB-INF/config/environments/
+#echo "List of files in web/config/envs"
+#ls ./sonarqube-${version}/web/WEB-INF/config/environments/
 
+echo "env variables"
+printenv
 
 
 # Start up sonar
