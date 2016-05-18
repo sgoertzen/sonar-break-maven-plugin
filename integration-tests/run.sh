@@ -11,6 +11,12 @@ function finish {
         ./sonarqube-${version}/bin/linux-x86-64/sonar.sh stop
     fi
 
+
+    # TODO - REMOVE THIS
+echo "\nPrinting Logs"
+cat ./sonarqube-${version}/logs/sonar.log
+
+
     # Clean up sonar
     rm -rf sonarqube-${version}
     # We leave the zip file around so it can be reused for the next run without downloading
@@ -59,7 +65,7 @@ for path in ./*; do
     dirname="$(basename "${path}")"
     [ "${dirname}" = "sonarqube-${version}" ] && continue # if sonarqube, skip
     cd ${dirname}
-    mvn clean install sonar:sonar sonar-break:sonar-break
+    mvn clean install sonar:sonar sonar-break:sonar-break -X
     returnValue=$?
     cd ..
     # Did we get an error and not expect it?
@@ -71,6 +77,3 @@ for path in ./*; do
         exitWithError "Error expected but not encountered"
     fi
 done
-
-echo "\nPrinting Logs"
-cat ./sonarqube-${version}/logs/sonar.log
