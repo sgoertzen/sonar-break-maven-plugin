@@ -28,7 +28,7 @@ trap finish EXIT
 
 # Fetch Sonar
 if [ ! -f "sonarqube-${version}.zip" ]; then
-    curl -L -O https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-${version}.zip
+    curl -k -L -O https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-${version}.zip
 fi
 # and extract
 unzip sonarqube-${version}.zip
