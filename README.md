@@ -84,7 +84,7 @@ mvn clean package
 ```
 
 ### Integration Tests
-    cd integeration-tests
+    cd integration-tests
     ./run.sh
 
 Details:
