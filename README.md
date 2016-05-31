@@ -80,7 +80,7 @@ The plugin is hosted on [SonaType Nexus](https://oss.sonatype.org/content/groups
 ### Build
 You can build and run the tests 
 ```
-mvn clean verify
+mvn clean package exec:exec
 ```
 
 Integration Test Details:

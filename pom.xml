@@ -182,8 +182,6 @@
                     <workingDirectory>${basedir}/integration-tests</workingDirectory>
                 </configuration>
             </plugin>
-
-
         </plugins>
     </build>
 </project>
