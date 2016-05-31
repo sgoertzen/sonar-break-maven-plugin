@@ -3,5 +3,5 @@ jdk:
   - oraclejdk7
 install: true
 script:
- - mvn clean package exec:exec
+ - mvn clean verify
 

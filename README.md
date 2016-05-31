@@ -78,16 +78,12 @@ The plugin is hosted on [SonaType Nexus](https://oss.sonatype.org/content/groups
 
 ## Development
 ### Build
-You can build this plugin yourself by executing 
+You can build and run the tests 
 ```
-mvn clean package
+mvn clean verify
 ```
 
-### Integration Tests
-    cd integration-tests
-    ./run.sh
-
-Details:
+Integration Test Details:
 * Downloads and runs a sonar server
 * Builds test poms and pushes the results into sonar
 * Tests this plugin by fetching the sonar status
