@@ -80,7 +80,12 @@ The plugin is hosted on [SonaType Nexus](https://oss.sonatype.org/content/groups
 ### Build
 You can build and run the tests 
 ```
-mvn clean package exec:exec
+mvn clean package
+```
+
+### Integration Tests
+```
+mvn clean install exec:exec -Dmaven.signing.skip=true
 ```
 
 Integration Test Details:
@@ -88,5 +93,5 @@ Integration Test Details:
 * Builds test poms and pushes the results into sonar
 * Tests this plugin by fetching the sonar status
 
-### Signing
-If you run "mvn verify" or "mvn install" it will attempt to sign the output using gpg.  For testing purposes you may wish to just remove this step from the build.  To do this you just need to remove the execution tags on the "maven-gpg-plugin" plugin in the main pom file. 
+### Skip Signing
+If you run "mvn verify" or "mvn install" it will attempt to sign the output using gpg.  Just pass "-Dmaven.signing.skip=true" into maven to skip this plugin.  Example: "mvn clean install exec:exec -Dmaven.signing.skip=true"  

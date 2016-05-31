@@ -3,5 +3,5 @@ jdk:
   - oraclejdk7
 install: true
 script:
- - mvn clean verify
+ - mvn clean install exec:exec -Dmaven.signing.skip=true
 

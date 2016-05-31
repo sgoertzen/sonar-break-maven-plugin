@@ -6,7 +6,7 @@
 
     <groupId>com.github.sgoertzen</groupId>
     <artifactId>sonar-break-maven-plugin</artifactId>
-    <version>1.1.4</version>
+    <version>1.1.5</version>
     <packaging>maven-plugin</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -15,6 +15,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.signing.skip>false</maven.signing.skip>
     </properties>
 
     <scm>
@@ -126,6 +127,9 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <skip>${maven.signing.skip}</skip>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -171,7 +175,7 @@
                 <executions>
                     <execution>
                         <id>Run Tests</id>
-                        <phase>integration-test</phase>
+                        <phase>none</phase> <!-- This needs to run after install so phase is none and invoked manually -->
                         <goals>
                             <goal>exec</goal>
                         </goals>
