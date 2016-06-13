@@ -95,3 +95,14 @@ Integration Test Details:
 
 ### Skip Signing
 If you run "mvn verify" or "mvn install" it will attempt to sign the output using gpg.  Just pass "-Dmaven.signing.skip=true" into maven to skip this plugin.  Example: "mvn clean install exec:exec -Dmaven.signing.skip=true"  
+
+
+## Version History
+
+1.1.6 - Switched to Java 8, support for SonarQube 5.6
+1.1.5 - Upgrading dependencies
+1.1.4 - Fix for error on first run of project
+1.1.3 - Support custom sonar key
+1.1.2 - Upgrading dependencies
+1.1 - Sonarqub 5.3 support
+1.0 - Initial release
