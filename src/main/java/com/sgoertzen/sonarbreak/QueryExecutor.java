@@ -40,7 +40,8 @@ public class QueryExecutor {
      * @param sonarServer              Fully qualified URL to the sonar server
      * @param sonarLookBackSeconds     Amount of time to look back into sonar history for the results of this build
      * @param waitForProcessingSeconds Amount of time to wait for sonar to finish processing the job
-     * @param log                      Log for logging  @return Results indicating if the build passed the sonar quality gate checks  @throws MalformedURLException
+     * @param log                      Log for logging  @return Results indicating if the build passed the sonar quality gate checks
+     * @throws MalformedURLException If the sonar url is invalid
      */
     public QueryExecutor(String sonarServer, int sonarLookBackSeconds, int waitForProcessingSeconds, Log log) throws MalformedURLException {
         this.sonarURL = new URL(sonarServer);
@@ -53,8 +54,9 @@ public class QueryExecutor {
      * Execute the given query on the specified sonar server.
      *
      * @param query The query specifying the project and version of the build
-     * @throws SonarBreakException
-     * @throws IOException
+     * @return Result fetched from sonar
+     * @throws SonarBreakException If there is an issues communicating with sonar
+     * @throws IOException         If the url is invalid
      */
     public Result execute(Query query) throws SonarBreakException, IOException {
         URL queryURL = buildURL(sonarURL, query);
@@ -73,8 +75,8 @@ public class QueryExecutor {
      * @param sonarURL The sonar server we will be querying
      * @param query    Holds details on the query we want to make
      * @return A URL object representing the query
-     * @throws MalformedURLException
-     * @throws IllegalArgumentException
+     * @throws MalformedURLException    If the sonar url is not valid
+     * @throws IllegalArgumentException If the sonar key is not valid
      */
     protected static URL buildURL(URL sonarURL, Query query) throws MalformedURLException, IllegalArgumentException {
         if (query.getSonarKey() == null || query.getSonarKey().length() == 0) {
@@ -151,9 +153,11 @@ public class QueryExecutor {
      * Pings a HTTP URL. This effectively sends a HEAD request and returns <code>true</code> if the response code is in
      * the 200-399 range.
      *
-     * @param url The HTTP URL to be pinged.
+     * @param url        The HTTP URL to be pinged.
+     * @param retryCount How many times to check for sonar before giving up
      * @return <code>true</code> if the given HTTP URL has returned response code 200-399 on a HEAD request,
      * otherwise <code>false</code>.
+     * @throws IOException If the sonar server is not available
      */
     protected boolean isURLAvailable(URL url, int retryCount) throws IOException {
         boolean serviceFound = false;
@@ -165,7 +169,7 @@ public class QueryExecutor {
                 log.debug(String.format("Got a valid response of %d from %s", responseCode, url));
                 serviceFound = true;
                 break;
-            } else if (i+1 < retryCount) { // only sleep if not on last iteration
+            } else if (i + 1 < retryCount) { // only sleep if not on last iteration
                 try {
                     log.debug("Sleeping while waiting for sonar to become available");
                     Thread.sleep(2000);

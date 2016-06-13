@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # version of sonarqube to use for the test
-version=5.5
+version=5.6
 
 function finish {
     # Stop sonar
@@ -47,7 +47,15 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
 fi
 
 # Wait for sonar to become available (up to one minute)
-for i in {1..20}; do if (curl -I http://127.0.0.1:9000 2>/dev/null | grep -q 200); then echo "Sonar up and running"; break; fi; echo "Waiting for sonar to become available"; sleep 3; done
+sonarfound=false
+for i in {1..20}; do if (curl -I http://127.0.0.1:9000 2>/dev/null | grep -q 200); then echo "Sonar up and running"; sonarfound=true; break; fi; echo "Waiting for sonar to become available"; sleep 3; done
+
+# If sonar didn't come up then print log and error
+if [ "$sonarfound" = false ] ; then
+    echo "Sonar did not start successfully, printing log files"
+    tail -n 100 ./sonarqube-${version}/logs/sonar.log
+    exitWithError "Sonar did not start"
+fi;
 
 # Add a condition in for zero critical issues
 echo "Adding critical error check into sonar"
