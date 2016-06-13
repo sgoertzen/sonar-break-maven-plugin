@@ -104,5 +104,5 @@ If you run "mvn verify" or "mvn install" it will attempt to sign the output usin
 1.1.4 - Fix for error on first run of project
 1.1.3 - Support custom sonar key
 1.1.2 - Upgrading dependencies
-1.1 - Sonarqub 5.3 support
+1.1 - Sonarqube 5.3 support
 1.0 - Initial release
