@@ -85,7 +85,7 @@ public class SonarBreakMojo extends AbstractMojo {
         switch (result.getStatus()) {
             case ERROR:
                 getLog().error(errorString);
-                throw new MojoExecutionException("Build did not past sonar tests.  " + errorString);
+                throw new MojoExecutionException("Build did not pass sonar tests.  " + errorString);
             case WARNING:
                 getLog().info("Build passed but warnings encountered.  " + errorString);
                 break;
