@@ -5,7 +5,7 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.sgoertzen/sonar-break-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.sgoertzen/sonar-break-maven-plugin/)
 [![Build Status](https://travis-ci.org/sgoertzen/sonar-break-maven-plugin.svg?branch=master)](https://travis-ci.org/sgoertzen/sonar-break-maven-plugin)
 
-A maven plugin that will fail a maven build if sonar reports errors with your project.  Tested with SonarQube 5.2 through 5.6.
+A maven plugin that will fail a maven build if sonar reports errors with your project.  Tested with SonarQube 5.2 through 6.0.
 
 ## Maven 
 To include in your project, update your pom.xml with the following:
@@ -14,7 +14,7 @@ To include in your project, update your pom.xml with the following:
         <dependency>
             <groupId>com.github.sgoertzen</groupId>
             <artifactId>sonarbreak</artifactId>
-            <version>1.1.3</version>
+            <version>1.2</version>
         </dependency>
     </dependencies>
 
@@ -23,7 +23,7 @@ To include in your project, update your pom.xml with the following:
             <plugin>
                 <groupId>com.github.sgoertzen</groupId>
                 <artifactId>sonarbreak</artifactId>
-                <version>1.1.3</version>
+                <version>1.2</version>
                 <configuration>
                     <sonarServer>https://sonar.yourserver.com</sonarServer>
                 </configuration>
