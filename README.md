@@ -99,6 +99,7 @@ If you run "mvn verify" or "mvn install" it will attempt to sign the output usin
 
 ## Version History
 
+* 1.2 - Support for SonarQube 6.0
 * 1.1.6 - Switched to Java 8, support for SonarQube 5.6
 * 1.1.5 - Upgrading dependencies
 * 1.1.4 - Fix for error on first run of project

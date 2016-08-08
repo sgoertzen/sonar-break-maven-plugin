@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # version of sonarqube to use for the test
-version=5.6
+version=6.0
 
 function finish {
     # Stop sonar
@@ -59,7 +59,10 @@ fi;
 
 # Add a condition in for zero critical issues
 echo "Adding critical error check into sonar"
-curl -X POST -H "Authorization: Basic YWRtaW46YWRtaW4=" -H "Cache-Control: no-cache" -H "Postman-Token: a1002e9f-7c26-b179-08de-e0066da5f318" -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" -F "gateId=1" -F "error=0" -F "metric=critical_violations" -F "op=GT" "http://localhost:9000/api/qualitygates/create_condition"
+# Quality gate for versions 5.6 and below
+curl -X POST -H "Authorization: Basic YWRtaW46YWRtaW4=" -H "Cache-Control: no-cache" -H "Content-Type: multipart/form-data" -F "gateId=1" -F "error=0" -F "metric=critical_violations" -F "op=GT" "http://localhost:9000/api/qualitygates/create_condition"
+# Quality gate for version 6.0 and above (critical turned into bugs in 6.0)
+curl -X POST -H "Authorization: Basic YWRtaW46YWRtaW4=" -H "Cache-Control: no-cache" -H "Content-Type: multipart/form-data" -F "gateId=1" -F "error=0" -F "metric=bugs" -F "op=GT" "http://localhost:9000/api/qualitygates/create_condition"
 
 # Run our tests
 for path in ./*; do
