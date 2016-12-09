@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # version of sonarqube to use for the test
-version=6.0
+version=6.1
 
 function finish {
     # Stop sonar
@@ -70,6 +70,7 @@ for path in ./*; do
     dirname="$(basename "${path}")"
     [ "${dirname}" = "sonarqube-${version}" ] && continue # if sonarqube, skip
     cd ${dirname}
+    mvn versions:update-properties versions:commit
     mvn clean install sonar:sonar sonar-break:sonar-break
     returnValue=$?
     cd ..
