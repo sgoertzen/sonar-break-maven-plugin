@@ -20,17 +20,20 @@
             <plugin>
                 <groupId>com.github.sgoertzen</groupId>
                 <artifactId>sonar-break-maven-plugin</artifactId>
-                <version>1.2</version>
+                <version>${sonar.break.maven.plugin.version}</version>
                 <configuration>
                     <sonarServer>http://localhost:9000/</sonarServer>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
+    <prerequisites>
+        <maven>3.0.2</maven>
+    </prerequisites>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.host.url>http://localhost:9000</sonar.host.url>
         <sonar.projectKey>branch123:qa:sonar-break-custom-key</sonar.projectKey>
+        <sonar.break.maven.plugin.version>1.2.2</sonar.break.maven.plugin.version>
     </properties>
 </project>
