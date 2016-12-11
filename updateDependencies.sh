@@ -38,12 +38,13 @@ echo "Creating branch $branch with updates."
 git checkout -b $branch
 
 git add .
+git commit -m "Auto update of dependencies"
 
 # push branch to github
 git push origin $branch
 
 # create pull request
-hub pull-request
+hub pull-request -m "Auto updates of dependencies"
 
 # todo: commit PR once all checks pass
 # todo: run mvn deploy
