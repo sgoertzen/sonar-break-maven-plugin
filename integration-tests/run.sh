@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # version of sonarqube to use for the test
-version=6.1
+version=6.2
 
 function finish {
     # Stop sonar
@@ -48,7 +48,7 @@ fi
 
 # Wait for sonar to become available (up to one minute)
 sonarfound=false
-for i in {1..20}; do if (curl -I http://127.0.0.1:9000 2>/dev/null | grep -q 200); then echo "Sonar up and running"; sonarfound=true; break; fi; echo "Waiting for sonar to become available"; sleep 3; done
+for i in {1..20}; do if (curl -I http://127.0.0.1:9000/coding_rules 2>/dev/null | grep -q 200); then echo "Sonar up and running"; sonarfound=true; break; fi; echo "Waiting for sonar to become available"; sleep 3; done
 
 # If sonar didn't come up then print log and error
 if [ "$sonarfound" = false ] ; then
