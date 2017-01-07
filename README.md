@@ -5,7 +5,7 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.sgoertzen/sonar-break-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.sgoertzen/sonar-break-maven-plugin/)
 [![Build Status](https://travis-ci.org/sgoertzen/sonar-break-maven-plugin.svg?branch=master)](https://travis-ci.org/sgoertzen/sonar-break-maven-plugin)
 
-A maven plugin that will fail a maven build if sonar reports errors with your project.  Tested with SonarQube 5.2 through 6.0.
+A maven plugin that will fail a maven build if sonar reports errors with your project.  Tested with SonarQube 5.2 through 6.2.
 
 ## Maven 
 To include in your project, update your pom.xml with the following:
@@ -14,7 +14,7 @@ To include in your project, update your pom.xml with the following:
         <dependency>
             <groupId>com.github.sgoertzen</groupId>
             <artifactId>sonarbreak</artifactId>
-            <version>1.2</version>
+            <version>1.2.2</version>
         </dependency>
     </dependencies>
 
@@ -23,7 +23,7 @@ To include in your project, update your pom.xml with the following:
             <plugin>
                 <groupId>com.github.sgoertzen</groupId>
                 <artifactId>sonarbreak</artifactId>
-                <version>1.2</version>
+                <version>1.2.2</version>
                 <configuration>
                     <sonarServer>https://sonar.yourserver.com</sonarServer>
                 </configuration>
@@ -43,7 +43,7 @@ These parameter goes into the configuration section so the build piece of your p
             <plugin>
                 <groupId>com.github.sgoertzen</groupId>
                 <artifactId>sonarbreak</artifactId>
-                <version>1.1.3</version>
+                <version>1.2.2</version>
                 <configuration>
                     <sonarServer>https://sonar.yourserver.com</sonarServer>
                     <sonarLookBackSeconds>60</sonarLookBackSeconds>
@@ -99,6 +99,7 @@ If you run "mvn verify" or "mvn install" it will attempt to sign the output usin
 
 ## Version History
 
+* 1.2.2 - Suport for SonarQube 6.2 and version updates
 * 1.2 - Support for SonarQube 6.0
 * 1.1.6 - Switched to Java 8, support for SonarQube 5.6
 * 1.1.5 - Upgrading dependencies
