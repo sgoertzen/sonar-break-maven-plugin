@@ -1,6 +1,7 @@
 package com.sgoertzen.sonarbreak;
 
 import com.sgoertzen.sonarbreak.qualitygate.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -26,6 +27,8 @@ public class SonarBreakMojo extends AbstractMojo {
     protected String waitForProcessingSeconds;
     @Parameter(property = "sonar.projectKey", defaultValue = "")
     protected String sonarKey;
+    @Parameter(property = "sonar.branch", defaultValue = "")
+    protected String sonarBranch;
 
     protected static String buildErrorString(List<Condition> conditions) {
         StringBuilder builder = new StringBuilder();
@@ -37,13 +40,19 @@ public class SonarBreakMojo extends AbstractMojo {
         return builder.toString();
     }
 
+    @Override
     public void execute() throws MojoExecutionException {
         MavenProject mavenProject = getMavenProject();
         String version = mavenProject.getVersion();
-        if (sonarKey == null || sonarKey.equals("")) {
+        if (StringUtils.isEmpty(sonarKey)) {
 
             sonarKey = String.format("%s:%s", mavenProject.getGroupId(), mavenProject.getArtifactId());
         }
+        if (!StringUtils.isEmpty(sonarBranch)){
+
+            sonarKey = String.format("%s:%s", sonarKey, sonarBranch);
+        }
+
         getLog().info("Querying sonar for analysis on " + sonarKey + ", version: " + version);
 
         try {
