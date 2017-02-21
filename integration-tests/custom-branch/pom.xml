@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.sgoertzen.test</groupId>
-    <artifactId>sonar-break-test-customkey</artifactId>
+    <artifactId>sonar-break-test-custombranch</artifactId>
     <version>1.0</version>
 
-    <name>sonar-break-test-customkey</name>
+    <name>sonar-break-test-custombranch</name>
 
     <build>
         <plugins>
@@ -33,7 +33,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.host.url>http://localhost:9000</sonar.host.url>
-        <sonar.projectKey>branch123:qa:sonar-break-custom-key</sonar.projectKey>
+        <sonar.branch>custombranch</sonar.branch>
         <sonar.break.maven.plugin.version>1.2.3</sonar.break.maven.plugin.version>
     </properties>
 </project>
