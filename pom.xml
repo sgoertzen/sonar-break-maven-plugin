@@ -6,7 +6,7 @@
 
     <groupId>com.github.sgoertzen</groupId>
     <artifactId>sonar-break-maven-plugin</artifactId>
-    <version>1.2.4</version>
+    <version>1.2.5</version>
     <packaging>maven-plugin</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -22,7 +22,7 @@
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
         <maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.7</nexus-staging-maven-plugin.version>
-        <exec-maven-plugin.version>1.5.0</exec-maven-plugin.version>
+        <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
     </properties>
 
     <scm>
