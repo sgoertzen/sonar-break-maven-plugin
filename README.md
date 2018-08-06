@@ -1,6 +1,5 @@
 # sonar-break-maven-plugin
 
-[![Dependency Status](https://www.versioneye.com/user/projects/56983e26af789b0027001e5b/badge.svg?style=flat)](https://www.versioneye.com/user/projects/56983e26af789b0027001e5b) 
 [![Codacy Badge](https://api.codacy.com/project/badge/grade/fa1e3196dc0549f1b45cf75c87c0227e)](https://www.codacy.com/app/sgoertzen/sonar-break-maven-plugin)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.sgoertzen/sonar-break-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.sgoertzen/sonar-break-maven-plugin/)
 [![Build Status](https://travis-ci.org/sgoertzen/sonar-break-maven-plugin.svg?branch=master)](https://travis-ci.org/sgoertzen/sonar-break-maven-plugin)
