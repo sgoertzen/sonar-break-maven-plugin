@@ -1,15 +1,17 @@
 package breaking;
 
+import java.util.Optional;
+
 public class BreakingTest {
     public static void main(String[] args) {
         System.out.println("In basic test");
     }
 
-    private String neverUsed;
+    private Optinal<String> neverUsed;
 
     public BreakingTest() {
         try {
-            doThing();
+            neverUsed.get();
         }
         catch (Exception e) {
 

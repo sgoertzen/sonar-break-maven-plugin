@@ -2,7 +2,9 @@ package com.sgoertzen.sonarbreak;
 
 import com.sgoertzen.sonarbreak.qualitygate.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -18,6 +20,8 @@ import java.util.Map;
 @Mojo(name = "sonar-break", aggregator = true)
 public class SonarBreakMojo extends AbstractMojo {
 
+    @Parameter(defaultValue = "${session}", required = true, readonly = true)
+    private MavenSession session;
     private static final String CONDITION_FORMAT = "%s: %s level at %s (expected level of %s).";
     @Parameter(property = "sonarServer", required = true)
     protected String sonarServer;
@@ -29,6 +33,9 @@ public class SonarBreakMojo extends AbstractMojo {
     protected String sonarKey;
     @Parameter(property = "sonar.branch", defaultValue = "")
     protected String sonarBranch;
+    @Parameter(defaultValue = "${mojoExecution}", required = true, readonly = true)
+    private MojoExecution mojoExecution;
+
 
     protected static String buildErrorString(List<Condition> conditions) {
         StringBuilder builder = new StringBuilder();
@@ -44,6 +51,14 @@ public class SonarBreakMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException {
         MavenProject mavenProject = getMavenProject();
         String version = mavenProject.getVersion();
+
+        if (shouldDelayExecution()) {
+            //TO work with multimodule projects as well
+            getLog().info("Delaying SonarQube break to the end of multi-module project");
+            return;
+        }
+
+
         if (StringUtils.isEmpty(sonarKey)) {
 
             sonarKey = String.format("%s:%s", mavenProject.getGroupId(), mavenProject.getArtifactId());
@@ -79,12 +94,7 @@ public class SonarBreakMojo extends AbstractMojo {
     }
 
     private MavenProject getMavenProject() throws MojoExecutionException {
-        Map pluginContext = this.getPluginContext();
-        Object project = pluginContext.get("project");
-        if (!MavenProject.class.isInstance(project)) {
-            throw new MojoExecutionException("Unable to get the group and artifact id of the building project.  Maven did not pass the expected information into the plugin.");
-        }
-        return (MavenProject) project;
+        return session.getTopLevelProject();
     }
 
     private void processResult(Result result) throws MojoExecutionException {
@@ -104,5 +114,23 @@ public class SonarBreakMojo extends AbstractMojo {
             default:
                 throw new MojoExecutionException("Unknown result state encountered: " + result.getStatus());
         }
+    }
+
+    private boolean shouldDelayExecution() {
+        return !isDetachedGoal() && !isLastProjectInReactor();
+    }
+
+    private boolean isDetachedGoal() {
+        return "default-cli".equals(mojoExecution.getExecutionId());
+    }
+
+    private boolean isLastProjectInReactor() {
+        List<MavenProject> sortedProjects = session.getProjectDependencyGraph().getSortedProjects();
+
+        MavenProject lastProject = sortedProjects.isEmpty()
+                ? session.getCurrentProject()
+                : sortedProjects.get( sortedProjects.size() - 1 );
+
+        return session.getCurrentProject().equals( lastProject );
     }
 }

@@ -11,8 +11,6 @@ public class Condition {
 
     @JsonProperty("metric")
     private String Name;
-    @JsonProperty("warning")
-    private String WarningLevel;
     @JsonProperty("error")
     private String ErrorLevel;
     @JsonProperty("actual")
@@ -42,14 +40,6 @@ public class Condition {
 
     public void setErrorLevel(String errorLevel) {
         ErrorLevel = errorLevel;
-    }
-
-    public String getWarningLevel() {
-        return WarningLevel;
-    }
-
-    public void setWarningLevel(String warningLevel) {
-        WarningLevel = warningLevel;
     }
 
     public String getName() {

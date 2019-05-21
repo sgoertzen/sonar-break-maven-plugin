@@ -25,27 +25,19 @@ public class ResultDeserializer extends JsonDeserializer {
         Result result = new Result();
 
         JsonNode root = jsonParser.readValueAsTree();
-        result.setId(getText(root, "id"));
-        result.setKey(getText(root, "key"));
-        result.setName(getText(root, "name"));
-        result.setVersion(getText(root, "version"));
-
-        JsonNode dateNode = root.get("date");
-        if (dateNode == null) {
-            throw new IOException("Node named \"date\" not found in JSON response.");
-        }
-        String dateString = dateNode.asText();
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZZ");
-        result.setDatetime(formatter.parseDateTime(dateString));
+        JsonNode component = root.get("component");
+        result.setId(getText(component, "id"));
+        result.setKey(getText(component, "key"));
+        result.setName(getText(component, "name"));
 
 
-        JsonNode msr = root.get("msr");
+        JsonNode msr = component.get("measures");
         if (msr == null) {
             throw new IOException("Node named \"msr\" not found in JSON response.");
         }
         Iterator<JsonNode> elements = msr.elements();
         if (elements.hasNext()) {
-            String qualityGateJson = elements.next().get("data").asText();
+            String qualityGateJson = elements.next().get("value").asText();
 
             ObjectMapper map2 = new ObjectMapper();
             JsonNode jsonNode = map2.readTree(qualityGateJson);

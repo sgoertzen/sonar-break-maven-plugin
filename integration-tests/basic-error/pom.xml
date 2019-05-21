@@ -33,6 +33,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.host.url>http://localhost:9000</sonar.host.url>
-        <sonar.break.maven.plugin.version>1.2.5</sonar.break.maven.plugin.version>
+        <sonar.break.maven.plugin.version>1.2.6-SNAPSHOT</sonar.break.maven.plugin.version>
     </properties>
 </project>

@@ -18,7 +18,6 @@ public class SonarBreakMojoTest {
         condition.setName("house");
         condition.setStatus(ConditionStatus.WARNING);
         condition.setActualLevel("5");
-        condition.setWarningLevel("10");
         condition.setErrorLevel("3");
         conditions.add(condition);
 
