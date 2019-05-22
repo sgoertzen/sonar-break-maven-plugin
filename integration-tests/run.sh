@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # version of sonarqube to use for the test
-version=6.2
+version=6.7
 
 function finish {
     # Stop sonar
@@ -28,7 +28,7 @@ trap finish EXIT
 
 # Fetch Sonar
 if [ ! -f "sonarqube-${version}.zip" ]; then
-    curl -k -L -O https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-${version}.zip
+    curl -k -L -O https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-${version}.zip
 fi
 # and extract
 unzip sonarqube-${version}.zip
@@ -40,6 +40,7 @@ unset RAILS_ENV
 # Start up sonar
 echo "Starting sonar"
 if [ "$(uname)" == "Darwin" ]; then
+    echo "Darwin -- Starting"
     ./sonarqube-${version}/bin/macosx-universal-64/sonar.sh start
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     echo "Starting Sonar on linux"
@@ -49,7 +50,7 @@ fi
 # Wait for sonar to become available (up to one minute)
 sonarfound=false
 for i in {1..20}; do if (curl -I http://127.0.0.1:9000/coding_rules 2>/dev/null | grep -q 200); then echo "Sonar up and running"; sonarfound=true; break; fi; echo "Waiting for sonar to become available"; sleep 3; done
-
+sleep 30
 # If sonar didn't come up then print log and error
 if [ "$sonarfound" = false ] ; then
     echo "Sonar did not start successfully, printing log files"
@@ -71,7 +72,7 @@ for path in ./*; do
     [ "${dirname}" = "sonarqube-${version}" ] && continue # if sonarqube, skip
     cd ${dirname}
     mvn versions:update-properties versions:commit
-    mvn clean install sonar:sonar sonar-break:sonar-break
+    mvn clean install org.sonarsource.scanner.maven:sonar-maven-plugin:sonar sonar-break:sonar-break
     returnValue=$?
     cd ..
     # Did we get an error and not expect it?

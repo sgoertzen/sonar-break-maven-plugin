@@ -1,7 +1,7 @@
 package com.sgoertzen.sonarbreak;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sgoertzen.sonarbreak.qualitygate.CeResponse;
 import com.sgoertzen.sonarbreak.qualitygate.Query;
 import com.sgoertzen.sonarbreak.qualitygate.Result;
 import org.apache.commons.io.IOUtils;
@@ -16,7 +16,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.List;
 
 /**
  * Execute a query against Sonar to fetch the quality gate status for a build.  This will look for a sonar status that
@@ -25,7 +24,9 @@ import java.util.List;
  */
 public class QueryExecutor {
 
-    public static final String SONAR_FORMAT_PATH = "api/resources/index?resource=%s&metrics=quality_gate_details";
+    public static final String SONAR_FORMAT_PATH = "api/measures/component?componentKey=%s"
+            + "&metricKeys=quality_gate_details";
+    public static final String SONAR_ANALYSIS_TIME_PATH = "api/ce/component?componentKey=%s";
     public static final int SONAR_CONNECTION_RETRIES = 10;
     public static final int SONAR_PROCESSING_WAIT_TIME = 10000;  // wait time between sonar checks in milliseconds
 
@@ -59,60 +60,61 @@ public class QueryExecutor {
      * @throws IOException         If the url is invalid
      */
     public Result execute(Query query) throws SonarBreakException, IOException {
-        URL queryURL = buildURL(sonarURL, query);
-        log.debug("Built a sonar query url of: " + queryURL.toString());
+        URL analysisQueryUrl = buildUrl(sonarURL,query, SONAR_ANALYSIS_TIME_PATH);
+        log.debug(String.format("Built a sonar query url of: %s" , analysisQueryUrl.toString()));
+        URL queryUrl = buildUrl(sonarURL, query, SONAR_FORMAT_PATH);
+        log.debug(String.format("Built a sonar query url of: %s", queryUrl.toString()));
+
 
         if (!isURLAvailable(sonarURL, SONAR_CONNECTION_RETRIES)) {
             throw new SonarBreakException(String.format("Unable to get a valid response after %d tries", SONAR_CONNECTION_RETRIES));
         }
 
-        return fetchSonarStatusWithRetries(queryURL, query.getVersion());
+        return fetchSonarStatusWithRetries(analysisQueryUrl, queryUrl);
     }
 
     /**
      * Creates a url for the specified quality gate query
      *
-     * @param sonarURL The sonar server we will be querying
+     * @param sonarUrl The sonar server we will be querying
      * @param query    Holds details on the query we want to make
      * @return A URL object representing the query
      * @throws MalformedURLException    If the sonar url is not valid
      * @throws IllegalArgumentException If the sonar key is not valid
      */
-    protected static URL buildURL(URL sonarURL, Query query) throws MalformedURLException, IllegalArgumentException {
+    protected static URL buildUrl(URL sonarUrl, Query query, String path)
+            throws MalformedURLException, IllegalArgumentException {
         if (query.getSonarKey() == null || query.getSonarKey().length() == 0) {
             throw new IllegalArgumentException("No resource specified in the Query");
         }
-        String sonarPathWithResource = String.format(SONAR_FORMAT_PATH, query.getSonarKey());
-        return new URL(sonarURL, sonarPathWithResource);
+        String sonarPathWithResource = String.format(path, query.getSonarKey());
+        return new URL(sonarUrl, sonarPathWithResource);
     }
 
     /**
      * Get the status from sonar for the currently executing build.  This waits for sonar to complete its processing
      * before returning the results.
      *
-     * @param queryURL The sonar URL to get the results from
-     * @param version  The current project version number
+     * @param queryUrl The sonar URL to get the results from
      * @return Matching result object for this build
      * @throws IOException
      * @throws SonarBreakException
      */
-    private Result fetchSonarStatusWithRetries(URL queryURL, String version) throws IOException, SonarBreakException {
+    private Result fetchSonarStatusWithRetries(URL analysisQueryUrl, URL queryUrl)
+            throws IOException, SonarBreakException {
         DateTime oneMinuteAgo = DateTime.now().minusSeconds(sonarLookBackSeconds);
         DateTime waitUntil = DateTime.now().plusSeconds(waitForProcessingSeconds);
         do {
             // If this is the first time the job is running on sonar the URL might not be available.  Return null and wait.
-            if (isURLAvailable(queryURL, 1)) {
-                Result result = fetchSonarStatus(queryURL);
-                if (result.getVersion().equals(version) && result.getDatetime().isAfter(oneMinuteAgo)) {
-                    log.debug("Found a sonar job run that matches version and in the correct time frame");
+            if (isAnalysisAvailable(analysisQueryUrl,oneMinuteAgo)) {
+                Result result = fetchSonarStatus(queryUrl);
+                if(null != result && null != result.getStatus()) {
                     return result;
+                }else{
+                    log.debug("Sleeping while waiting for sonar to process job.");
                 }
-                String message = String.format("Sleeping while waiting for sonar to process job.  Target Version: %s.  " +
-                                "Sonar reporting Version: %s.  Looking back until: %s  Last result time: %s", version,
-                        result.getVersion(), oneMinuteAgo.toString(), result.getDatetime().toString());
-                log.debug(message);
             } else {
-                log.debug(String.format("Query url not available yet: %s", queryURL));
+                log.debug(String.format("Query url not available yet: %s", queryUrl));
             }
             try {
                 Thread.sleep(SONAR_PROCESSING_WAIT_TIME);
@@ -125,6 +127,34 @@ public class QueryExecutor {
                 "using the \"waitForProcessingSeconds\" configuration parameter.", waitForProcessingSeconds);
         throw new SonarBreakException(message);
     }
+
+
+    /**
+     * Pings a HTTP URL. This effectively sends a request and returns <code>true</code>
+     * if the response code is in the time range of 1 minute back till now.
+     *
+     * @param url        The HTTP URL to be pinged.
+     * @return <code>true</code> if the given HTTP URL has returned response code 200-399 on a HEAD request,
+     * otherwise <code>false</code>.
+     * @throws IOException If the sonar server is not available
+     */
+    protected boolean isAnalysisAvailable(URL url, DateTime oneMinuteAgo)
+            throws SonarBreakException,IOException {
+        InputStream in = null;
+        try {
+            URLConnection connection = url.openConnection();
+            connection.setRequestProperty("Accept", "application/json");
+            in = connection.getInputStream();
+
+            String response = IOUtils.toString(in);
+            CeResponse result = parseResponse(response,CeResponse.class);
+            return null != result  && oneMinuteAgo.isBefore(result.getAnalysisTime());
+        } finally {
+            IOUtils.closeQuietly(in);
+        }
+    }
+
+
 
     /**
      * Get the status of a build project from sonar.  This returns the current status that sonar has and does not
@@ -143,7 +173,7 @@ public class QueryExecutor {
             in = connection.getInputStream();
 
             String response = IOUtils.toString(in);
-            return parseResponse(response);
+            return parseResponse(response, Result.class);
         } finally {
             IOUtils.closeQuietly(in);
         }
@@ -188,20 +218,20 @@ public class QueryExecutor {
      * @return Object representing the Sonar response
      * @throws SonarBreakException Thrown if the response is not JSON or it does not contain quality gate data.
      */
-    protected static Result parseResponse(String response) throws SonarBreakException {
+    protected static <T> T parseResponse(String response, Class<T> clazz)
+            throws SonarBreakException {
         ObjectMapper mapper = new ObjectMapper();
         final DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         mapper.setDateFormat(df);
-        List<Result> results;
+        T result;
         try {
-            results = mapper.readValue(response, new TypeReference<List<Result>>() {
-            });
+            result = mapper.readValue(response, clazz);
         } catch (IOException e) {
-            throw new SonarBreakException("Unable to parse the json into a List of QualityGateResults.  Json is: " + response, e);
+            String msg = String.format("Unable to parse resp into %s. Json is: %s",
+                    clazz.getName() ,response);
+            throw new SonarBreakException(msg, e);
         }
-        if (results == null || results.size() != 1) {
-            throw new SonarBreakException("Unable to deserialize JSON response: " + response);
-        }
-        return results.get(0);
+        return result;
     }
+
 }

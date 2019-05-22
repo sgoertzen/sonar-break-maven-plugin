@@ -15,8 +15,6 @@ public class Result {
     private String id;
     private String key;
     private String name;
-    private DateTime datetime;
-    private String version;
     private List<Condition> conditions;
     private ConditionStatus status;
 
@@ -42,22 +40,6 @@ public class Result {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public DateTime getDatetime() {
-        return datetime;
-    }
-
-    public void setDatetime(DateTime datetime) {
-        this.datetime = datetime;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
     }
 
     public List<Condition> getConditions() {
