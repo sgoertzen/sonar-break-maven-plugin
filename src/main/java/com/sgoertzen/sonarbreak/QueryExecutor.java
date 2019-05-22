@@ -218,7 +218,8 @@ public class QueryExecutor {
      * @return Object representing the Sonar response
      * @throws SonarBreakException Thrown if the response is not JSON or it does not contain quality gate data.
      */
-    protected static <T> T parseResponse(String response, Class<T> clazz) throws SonarBreakException {
+    protected static <T> T parseResponse(String response, Class<T> clazz)
+            throws SonarBreakException {
         ObjectMapper mapper = new ObjectMapper();
         final DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         mapper.setDateFormat(df);
