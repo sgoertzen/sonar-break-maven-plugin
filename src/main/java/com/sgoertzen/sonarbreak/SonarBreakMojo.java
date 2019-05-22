@@ -50,14 +50,12 @@ public class SonarBreakMojo extends AbstractMojo {
     @Override
     public void execute() throws MojoExecutionException {
         MavenProject mavenProject = getMavenProject();
-        String version = mavenProject.getVersion();
 
         if (shouldDelayExecution()) {
             //TO work with multimodule projects as well
             getLog().info("Delaying SonarQube break to the end of multi-module project");
             return;
         }
-
 
         if (StringUtils.isEmpty(sonarKey)) {
 
@@ -67,7 +65,7 @@ public class SonarBreakMojo extends AbstractMojo {
 
             sonarKey = String.format("%s:%s", sonarKey, sonarBranch);
         }
-
+        final String version = mavenProject.getVersion();
         getLog().info("Querying sonar for analysis on " + sonarKey + ", version: " + version);
 
         try {

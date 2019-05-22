@@ -1,9 +1,6 @@
 package com.sgoertzen.sonarbreak;
 
 import com.sgoertzen.sonarbreak.qualitygate.*;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 
 import java.net.MalformedURLException;
@@ -19,7 +16,7 @@ public class QueryExecutorTest {
     public void buildURLTest() throws MalformedURLException {
         URL sonarURL = new URL("https://sonar.test.com");
         Query query = new Query("some-service", "1.0");
-        URL url = QueryExecutor.buildURL(sonarURL, query,QueryExecutor.SONAR_FORMAT_PATH);
+        URL url = QueryExecutor.buildUrl(sonarURL, query,QueryExecutor.SONAR_FORMAT_PATH);
         assertEquals("URL", "https://sonar.test.com/api/measures/component?componentKey=some-service&metricKeys=quality_gate_details", url.toString());
     }
 
@@ -27,7 +24,7 @@ public class QueryExecutorTest {
     public void buildURLNoResourceTest() throws IllegalArgumentException, MalformedURLException {
         URL sonarURL = new URL("https://sonar.test.com");
         Query query = new Query("", "1.0");
-        QueryExecutor.buildURL(sonarURL, query,QueryExecutor.SONAR_FORMAT_PATH);
+        QueryExecutor.buildUrl(sonarURL, query,QueryExecutor.SONAR_FORMAT_PATH);
     }
 
     @Test
