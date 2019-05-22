@@ -24,8 +24,8 @@ import java.text.SimpleDateFormat;
  */
 public class QueryExecutor {
 
-    public static final String SONAR_FORMAT_PATH = "api/measures/component?componentKey=%s" +
-            "&metricKeys=quality_gate_details";
+    public static final String SONAR_FORMAT_PATH = "api/measures/component?componentKey=%s"
+            + "&metricKeys=quality_gate_details";
     public static final String SONAR_ANALYSIS_TIME_PATH = "api/ce/component?componentKey=%s";
     public static final int SONAR_CONNECTION_RETRIES = 10;
     public static final int SONAR_PROCESSING_WAIT_TIME = 10000;  // wait time between sonar checks in milliseconds
@@ -226,7 +226,8 @@ public class QueryExecutor {
         try {
             result = mapper.readValue(response, Result.class);
         } catch (IOException e) {
-            String msg = String.format("Unable to parse resp into QualityGateResults. Json is: %s", response);
+            String msg = String.format("Unable to parse resp into QualityGateResults. Json is: %s",
+                    response);
             throw new SonarBreakException(msg, e);
         }
         return result;
@@ -246,7 +247,9 @@ public class QueryExecutor {
         try {
             result = mapper.readValue(response, CeResponse.class);
         } catch (IOException e) {
-            throw new SonarBreakException("Unable to parse the ce response json into the object.  Json is: " + response, e);
+            String msg = String.format("Unable to parse below ce response into the object. %s",
+                    response);
+            throw new SonarBreakException(msg, e);
         }
         return result;
     }

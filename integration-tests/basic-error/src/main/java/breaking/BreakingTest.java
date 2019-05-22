@@ -17,8 +17,4 @@ public class BreakingTest {
 
         }
     }
-
-    private void doThing() throws NullPointerException {
-        System.out.println("Doing a thing");
-    }
 }
