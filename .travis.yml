@@ -4,4 +4,4 @@ jdk:
 install: true
 script:
  - mvn clean install exec:exec -Dmaven.signing.skip=true
-
+    # integration test `integration-tests/run.sh` is executed with `exec:exec`
