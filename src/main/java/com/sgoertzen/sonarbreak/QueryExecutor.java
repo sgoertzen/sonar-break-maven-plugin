@@ -147,7 +147,7 @@ public class QueryExecutor {
             in = connection.getInputStream();
 
             String response = IOUtils.toString(in);
-            CeResponse result = parseCeResponse(response);
+            CeResponse result = parseResponse(response,CeResponse.class);
             return null != result  && oneMinuteAgo.isBefore(result.getAnalysisTime());
         } finally {
             IOUtils.closeQuietly(in);
@@ -173,7 +173,7 @@ public class QueryExecutor {
             in = connection.getInputStream();
 
             String response = IOUtils.toString(in);
-            return parseResponse(response);
+            return parseResponse(response, Result.class);
         } finally {
             IOUtils.closeQuietly(in);
         }
@@ -218,37 +218,16 @@ public class QueryExecutor {
      * @return Object representing the Sonar response
      * @throws SonarBreakException Thrown if the response is not JSON or it does not contain quality gate data.
      */
-    protected static Result parseResponse(String response) throws SonarBreakException {
+    protected static <T> T parseResponse(String response, Class<T> clazz) throws SonarBreakException {
         ObjectMapper mapper = new ObjectMapper();
         final DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         mapper.setDateFormat(df);
-        Result result;
+        T result;
         try {
-            result = mapper.readValue(response, Result.class);
+            result = mapper.readValue(response, clazz);
         } catch (IOException e) {
-            String msg = String.format("Unable to parse resp into QualityGateResults. Json is: %s",
-                    response);
-            throw new SonarBreakException(msg, e);
-        }
-        return result;
-    }
-
-
-    /**
-     * Parses the string response from sonar into POJOs.
-     *
-     * @param response The json response from the sonar server.
-     * @return Object representing the Sonar response
-     * @throws SonarBreakException Thrown if the response is not JSON or it does not contain quality gate data.
-     */
-    protected static CeResponse parseCeResponse(String response) throws SonarBreakException {
-        ObjectMapper mapper = new ObjectMapper();
-        CeResponse result;
-        try {
-            result = mapper.readValue(response, CeResponse.class);
-        } catch (IOException e) {
-            String msg = String.format("Unable to parse below ce response into the object. %s",
-                    response);
+            String msg = String.format("Unable to parse resp into %s. Json is: %s",
+                    clazz.getName() ,response);
             throw new SonarBreakException(msg, e);
         }
         return result;

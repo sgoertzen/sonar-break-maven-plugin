@@ -31,7 +31,7 @@ public class QueryExecutorTest {
     public void parseResponseSimpleTest() throws Exception {
         String input = "{\"component\":{\"id\":7560,\"measures\":[],\"key\":\"com.test.service:my-service\",\"name\":\"Service Name\",\"date\":\"2015-12-10T00:52:31+0000\"}}";
         System.out.println(input);
-        Result result = QueryExecutor.parseResponse(input);
+        Result result = QueryExecutor.parseResponse(input,Result.class);
         assertEquals("7560", result.getId());
     }
 
@@ -39,7 +39,7 @@ public class QueryExecutorTest {
     public void parseResponseMissingMSRTest() throws Exception {
         String input = "{\"component\":{\"id\":7560,\"key\":\"com.test.service:my-service\",\"name\":\"Service Name\"}}";
 
-        Result result = QueryExecutor.parseResponse(input);
+        Result result = QueryExecutor.parseResponse(input,Result.class);
         assertEquals("7560", result.getId());
     }
 
@@ -47,7 +47,7 @@ public class QueryExecutorTest {
     public void parseResponseExtraFieldTest() throws Exception {
         String input = "{\"component\":{\"id\":7560,\"key\":\"com.test.service:my-service\",\"name\":\"Service Name\",\"qualifier\":\"TRK\",\"measures\":[{\"metric\":\"quality_gate_details\",\"value\":\"{\\\"level\\\":\\\"ERROR\\\",\\\"conditions\\\":[{\\\"metric\\\":\\\"coverage\\\",\\\"op\\\":\\\"LT\\\",\\\"error\\\":\\\"15\\\",\\\"actual\\\":\\\"11.3\\\",\\\"level\\\":\\\"ERROR\\\"},{\\\"metric\\\":\\\"critical_violations\\\",\\\"op\\\":\\\"NE\\\",\\\"error\\\":\\\"0\\\",\\\"actual\\\":\\\"25\\\",\\\"level\\\":\\\"ERROR\\\"},{\\\"metric\\\":\\\"blocker_violations\\\",\\\"op\\\":\\\"NE\\\",\\\"error\\\":\\\"0\\\",\\\"actual\\\":\\\"0\\\",\\\"level\\\":\\\"OK\\\"}]}\"}]}}";
 
-        Result result = QueryExecutor.parseResponse(input);
+        Result result = QueryExecutor.parseResponse(input,Result.class);
         assertEquals("7560", result.getId());
     }
 
@@ -55,7 +55,7 @@ public class QueryExecutorTest {
     public void parseResponseConditionsTest() throws Exception {
         String input = "{\"component\":{\"id\":7560,\"key\":\"com.test.service:my-service\",\"name\":\"Service Name\",\"qualifier\":\"TRK\",\"measures\":[{\"metric\":\"quality_gate_details\",\"value\":\"{\\\"level\\\":\\\"ERROR\\\",\\\"conditions\\\":[{\\\"metric\\\":\\\"coverage\\\",\\\"op\\\":\\\"LT\\\",\\\"error\\\":\\\"15\\\",\\\"actual\\\":\\\"11.3\\\",\\\"level\\\":\\\"ERROR\\\"},{\\\"metric\\\":\\\"critical_violations\\\",\\\"op\\\":\\\"NE\\\",\\\"error\\\":\\\"0\\\",\\\"actual\\\":\\\"25\\\",\\\"level\\\":\\\"ERROR\\\"},{\\\"metric\\\":\\\"blocker_violations\\\",\\\"op\\\":\\\"NE\\\",\\\"error\\\":\\\"0\\\",\\\"actual\\\":\\\"0\\\",\\\"level\\\":\\\"OK\\\"}]}\"}]}}";
 
-        Result result = QueryExecutor.parseResponse(input);
+        Result result = QueryExecutor.parseResponse(input,Result.class);
         assertEquals("Level does not match", ConditionStatus.ERROR, result.getStatus());
 
         List<Condition> conditions = result.getConditions();
@@ -73,7 +73,7 @@ public class QueryExecutorTest {
     public void parseResponseAllPropertiesTest() throws Exception {
         String input = "{\"component\":{\"id\":7560,\"key\":\"com.test.service:my-service\",\"name\":\"Service Name\",\"qualifier\":\"TRK\",\"measures\":[{\"metric\":\"quality_gate_details\",\"value\":\"{\\\"level\\\":\\\"ERROR\\\",\\\"conditions\\\":[{\\\"metric\\\":\\\"coverage\\\",\\\"op\\\":\\\"LT\\\",\\\"error\\\":\\\"15\\\",\\\"actual\\\":\\\"11.3\\\",\\\"level\\\":\\\"ERROR\\\"},{\\\"metric\\\":\\\"critical_violations\\\",\\\"op\\\":\\\"NE\\\",\\\"error\\\":\\\"0\\\",\\\"actual\\\":\\\"25\\\",\\\"level\\\":\\\"ERROR\\\"},{\\\"metric\\\":\\\"blocker_violations\\\",\\\"op\\\":\\\"NE\\\",\\\"error\\\":\\\"0\\\",\\\"actual\\\":\\\"0\\\",\\\"level\\\":\\\"OK\\\"}]}\"}]}}";
 
-        Result result = QueryExecutor.parseResponse(input);
+        Result result = QueryExecutor.parseResponse(input,Result.class);
         assertEquals("Id does not match", "7560", result.getId());
         assertEquals("Key does not match", "com.test.service:my-service", result.getKey());
         assertEquals("Name does not match", "Service Name", result.getName());
@@ -87,6 +87,6 @@ public class QueryExecutorTest {
     @Test(expected = SonarBreakException.class)
     public void parseResponseNonJSONTest() throws Exception {
         String input = "<html><body>ERROR</body></html>";
-        QueryExecutor.parseResponse(input);
+        QueryExecutor.parseResponse(input,Result.class);
     }
 }
